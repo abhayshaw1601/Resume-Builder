@@ -1,4 +1,5 @@
 import React from 'react'
+import Navbar from '../components/Navbar'
 
 const features = [
     {
@@ -72,6 +73,7 @@ const features = [
 const Feature = () => {
     return (
         <section id="features" className="bg-black text-white py-20 md:py-28 px-4">
+            <Navbar />
             <div className="max-w-6xl mx-auto">
                 {/* Section Header */}
                 <div className="text-center mb-16 md:mb-20">

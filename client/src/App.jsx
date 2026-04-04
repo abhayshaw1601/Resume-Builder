@@ -7,6 +7,8 @@ import Dashboard from './pages/Dashboard'
 import ResumeBuilder from './pages/ResumeBuilder'
 import Preview from './pages/Preview'
 import Layout from './pages/Layout'
+import Contact from './pages/Contact'
+import Feature from './pages/Feature'
 
 const App = () => {
   return (
@@ -18,10 +20,12 @@ const App = () => {
           <Route index element={<Dashboard />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
         </Route>
-        
+
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/view/:resumeId" element={<Preview />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/feature" element={<Feature />} />
       </Routes>
     </>
   )
