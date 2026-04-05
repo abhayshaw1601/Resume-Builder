@@ -38,7 +38,7 @@ const Hero = () => {
                 `}
             </style>
 
-            <header className='bg-black text-white flex flex-col items-center bg-[url("https://assets.prebuiltui.com/images/components/hero-section/hero-background-image.png")] bg-cover bg-center bg-no-repeat pb-10'>
+            <header className='min-h-[100dvh] relative bg-black text-white flex flex-col items-center justify-center pt-10 md:pt-20 bg-[url("https://assets.prebuiltui.com/images/components/hero-section/hero-background-image.png")] bg-cover bg-center bg-no-repeat pb-28 md:pb-10 w-full'>
                 {/* <Navbar /> */}
 
                 <div className="rainbow relative z-0 bg-white/15 overflow-hidden p-px flex items-center justify-center rounded-full transition duration-300 active:scale-100 mt-28 md:mt-32">
@@ -91,10 +91,7 @@ const Hero = () => {
                     </div>
                 </div>
 
-                <div className='scroll-down flex flex-col items-center gap-4 mt-20 animate-bounce cursor-pointer'>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 9A7 7 0 1 0 5 9v6a7 7 0 1 0 14 0zm-7-3v4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                    <p className='text-sm text-white/50'>Scroll down</p>
-                </div>
+
             </header>
         </>
     )

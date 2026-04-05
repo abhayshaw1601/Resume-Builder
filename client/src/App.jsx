@@ -9,23 +9,29 @@ import Preview from './pages/Preview'
 import Layout from './pages/Layout'
 import Contact from './pages/Contact'
 import Feature from './pages/Feature'
+import PublicLayout from './components/PublicLayout'
 
 const App = () => {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Pages wrapped with Navbar and Footer */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/feature" element={<Feature />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/view/:resumeId" element={<Preview />} />
+        </Route>
 
+        {/* Dashboard Pages */}
         <Route path="/app" element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
         </Route>
 
+        {/* Full screen Auth Pages */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/view/:resumeId" element={<Preview />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/feature" element={<Feature />} />
       </Routes>
     </>
   )
