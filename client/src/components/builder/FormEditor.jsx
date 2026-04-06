@@ -6,6 +6,9 @@ import EducationForm from './FormSections/EducationForm'
 import SkillsForm from './FormSections/SkillsForm'
 import TargetJobForm from './FormSections/TargetJobForm'
 import ImageUploadForm from './FormSections/ImageUploadForm'
+import TemplateSelectorForm from './FormSections/TemplateSelectorForm'
+import ThemeSettingsForm from './FormSections/ThemeSettingsForm'
+import ProjectForm from './FormSections/ProjectForm'
 
 const AccordionItem = ({ title, id, activeAccordion, setActiveAccordion, children }) => {
   const isActive = activeAccordion === id
@@ -49,10 +52,18 @@ const FormEditor = ({ resumeData, setResumeData }) => {
 
   return (
     <div className="flex flex-col gap-2 pr-2">
+      <AccordionItem title="Visual Templates" id="templates" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
+        <TemplateSelectorForm currentTemplate={resumeData.template || 'classic'} setResumeData={setResumeData} />
+      </AccordionItem>
+
+      <AccordionItem title="Theme & Colors" id="theme" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
+        <ThemeSettingsForm accentColor={resumeData.accent_color} setResumeData={setResumeData} />
+      </AccordionItem>
+
       <AccordionItem title="Personal Information" id="personal" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
         <PersonalInfoForm data={resumeData.personal_info} onChange={handlePersonalChange} />
       </AccordionItem>
-      
+
       <AccordionItem title="Profile Photo" id="photo" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
         <ImageUploadForm data={resumeData.personal_info} onChange={handlePersonalChange} />
       </AccordionItem>
@@ -60,7 +71,7 @@ const FormEditor = ({ resumeData, setResumeData }) => {
       <AccordionItem title="Professional Summary" id="summary" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
         <SummaryForm data={resumeData.summary} onChange={handleChange} />
       </AccordionItem>
-      
+
       <AccordionItem title="Professional Experience" id="experience" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
         <ExperienceForm experience={resumeData.experience} setResumeData={setResumeData} />
       </AccordionItem>
@@ -72,9 +83,13 @@ const FormEditor = ({ resumeData, setResumeData }) => {
       <AccordionItem title="Target Job & AI Skills" id="skills" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
         <TargetJobForm jobDescription={resumeData.target_job} setResumeData={setResumeData} />
         <div className="my-6 border-t border-white/5 relative">
-            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 px-3 text-xs text-gray-500 font-semibold tracking-widest uppercase">Your Skillset</span>
+          <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 px-3 text-xs text-gray-500 font-semibold tracking-widest uppercase">Your Skillset</span>
         </div>
         <SkillsForm skills={resumeData.skills} setResumeData={setResumeData} />
+      </AccordionItem>
+
+      <AccordionItem title="Projects & Portfolio" id="projects" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
+        <ProjectForm projects={resumeData.projects} setResumeData={setResumeData} />
       </AccordionItem>
 
     </div>

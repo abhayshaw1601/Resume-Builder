@@ -1,6 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 
-const ModernTemplate = ({ data, accentColor, accentBg }) => {
+const ModernTemplate = ({ data, accentColor }) => {
 	const formatDate = (dateStr) => {
 		if (!dateStr) return "";
 		const [year, month] = dateStr.split("-");
@@ -13,7 +13,7 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 	return (
 		<div className="max-w-4xl mx-auto bg-white text-gray-800">
 			{/* Header */}
-		<header className="p-8 text-white" style={{ background: accentBg || accentColor }}>
+			<header className="p-8 text-white" style={{ backgroundColor: accentColor }}>
 				<h1 className="text-4xl font-light mb-3">
 					{data.personal_info?.full_name || "Your Name"}
 				</h1>
@@ -39,7 +39,7 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 					)}
 					{data.personal_info?.linkedin && (
 						<a target="_blank" href={data.personal_info?.linkedin} className="flex items-center gap-2">
-							<Link className="size-4" />
+							<Linkedin className="size-4" />
 							<span className="break-all text-xs">{data.personal_info.linkedin.split("https://www.")[1] ? data.personal_info.linkedin.split("https://www.")[1] : data.personal_info.linkedin}</span>
 						</a>
 					)}
@@ -77,12 +77,7 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 									<div className="flex justify-between items-start mb-2">
 										<div>
 											<h3 className="text-xl font-medium text-gray-900">{exp.position}</h3>
-											<p className="font-medium" style={{ color: accentColor }}>
-												{exp.link
-													? <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:underline">{exp.company} ↗</a>
-													: exp.company
-												}
-											</p>
+											<p className="font-medium" style={{ color: accentColor }}>{exp.company}</p>
 										</div>
 										<div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded">
 											{formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
@@ -109,15 +104,17 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 						<div className="space-y-6">
 							{data.project.map((p, index) => (
 								<div key={index} className="relative pl-6 border-l border-gray-200" style={{borderLeftColor: accentColor}}>
-									<div className="flex items-center gap-2">
-										<h3 className="text-lg font-medium text-gray-900">{p.name}</h3>
-										{p.link && (
-											<a href={p.link} target="_blank" rel="noopener noreferrer" style={{ color: accentColor }} className="text-xs hover:underline">↗ Link</a>
-										)}
+
+
+									<div className="flex justify-between items-start">
+										<div>
+											<h3 className="text-lg font-medium text-gray-900">{p.name}</h3>
+										</div>
 									</div>
-									{p.type && <p className="text-xs text-gray-400 mb-1">{p.type}</p>}
 									{p.description && (
-										<div className="text-gray-700 leading-relaxed text-sm mt-3">{p.description}</div>
+										<div className="text-gray-700 leading-relaxed text-sm mt-3">
+											{p.description}
+										</div>
 									)}
 								</div>
 							))}

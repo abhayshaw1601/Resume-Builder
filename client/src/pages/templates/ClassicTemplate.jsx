@@ -1,6 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Linkedin, Globe } from "lucide-react";
 
-const ClassicTemplate = ({ data, accentColor, accentBg }) => {
+const ClassicTemplate = ({ data, accentColor }) => {
     const formatDate = (dateStr) => {
         if (!dateStr) return "";
         const [year, month] = dateStr.split("-");
@@ -13,7 +13,7 @@ const ClassicTemplate = ({ data, accentColor, accentBg }) => {
     return (
         <div className="max-w-4xl mx-auto p-8 bg-white text-gray-800 leading-relaxed">
             {/* Header */}
-            <header className="text-center mb-8 pb-6 border-b-4" style={{ borderColor: accentColor }}>
+            <header className="text-center mb-8 pb-6 border-b-2" style={{ borderColor: accentColor }}>
                 <h1 className="text-3xl font-bold mb-2" style={{ color: accentColor }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
@@ -39,7 +39,7 @@ const ClassicTemplate = ({ data, accentColor, accentBg }) => {
                     )}
                     {data.personal_info?.linkedin && (
                         <div className="flex items-center gap-1">
-                            <Link className="size-4" />
+                            <Linkedin className="size-4" />
                             <span className="break-all">{data.personal_info.linkedin}</span>
                         </div>
                     )}
@@ -75,11 +75,7 @@ const ClassicTemplate = ({ data, accentColor, accentBg }) => {
                                 <div className="flex justify-between items-start mb-2">
                                     <div>
                                         <h3 className="font-semibold text-gray-900">{exp.position}</h3>
-                                        <p className="text-gray-700 font-medium">{
-                                            exp.link
-                                                ? <a href={exp.link} target="_blank" rel="noopener noreferrer" style={{ color: accentColor }} className="hover:underline">{exp.company} ↗</a>
-                                                : exp.company
-                                        }</p>
+                                        <p className="text-gray-700 font-medium">{exp.company}</p>
                                     </div>
                                     <div className="text-right text-sm text-gray-600">
                                         <p>{formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}</p>
@@ -107,13 +103,7 @@ const ClassicTemplate = ({ data, accentColor, accentBg }) => {
                         {data.project.map((proj, index) => (
                             <div key={index} className="flex justify-between items-start border-l-3 border-gray-300 pl-6">
                                 <div>
-                                    <div className="flex items-center gap-2">
-                                        <li className="font-semibold text-gray-800 ">{proj.name}</li>
-                                        {proj.link && (
-                                            <a href={proj.link} target="_blank" rel="noopener noreferrer" style={{ color: accentColor }} className="text-xs hover:underline" title={proj.link}>↗ Link</a>
-                                        )}
-                                    </div>
-                                    {proj.type && <p className="text-xs text-gray-500 mb-1">{proj.type}</p>}
+                                    <li className="font-semibold text-gray-800 ">{proj.name}</li>
                                     <p className="text-gray-600">{proj.description}</p>
                                 </div>
                             </div>
