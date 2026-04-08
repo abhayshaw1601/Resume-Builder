@@ -1,28 +1,35 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import API from '../api/axios'
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' })
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const { login } = useAuth()
     const navigate = useNavigate()
 
     const handleChange = (e) => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+        setError('')
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         setLoading(true)
+        setError('')
         
-        // Mock API call to create user, then automatically login
-        setTimeout(() => {
-            login({ email: formData.email, name: formData.name })
+        try {
+            const { data } = await API.post('/auth/register', formData)
+            login(data)
+            navigate('/app')
+        } catch (err) {
+            setError(err.response?.data?.message || 'Something went wrong during registration')
+        } finally {
             setLoading(false)
-            navigate('/app') // Redirect to dashboard
-        }, 1500)
+        }
     }
 
     return (
@@ -50,6 +57,14 @@ const Register = () => {
 
                 {/* Form Card */}
                 <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-8 backdrop-blur-sm">
+                    
+                    {error && (
+                        <div className="mb-5 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                            {error}
+                        </div>
+                    )}
+
                     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
 
                         {/* Floating Label Input for Full Name */}

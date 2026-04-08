@@ -14,6 +14,11 @@ const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
+        // Validation
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Please provide name, email, and password' });
+        }
+
         // Check if user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -49,6 +54,11 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Validation
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Please provide email and password' });
+        }
 
         // Find user by email
         const user = await User.findOne({ email });
