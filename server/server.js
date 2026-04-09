@@ -12,10 +12,15 @@ connectDB();
 const app = express();
 
 // ─── Middleware ───────────────────────────────────────────
+// In server/server.js
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: [
+        'http://localhost:5173',
+        'https://resume-builder-xi-amber-90.vercel.app'
+    ],
     credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
