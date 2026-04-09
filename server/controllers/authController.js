@@ -1,6 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { OAuth2Client } = require('google-auth-library');
+
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -97,4 +101,62 @@ const getMe = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser, getMe };
+// @desc    Google OAuth Login/Register
+// @route   POST /api/auth/google
+// @access  Public
+const googleAuth = async (req, res) => {
+    try {
+        const { idToken } = req.body;
+
+        if (!idToken) {
+            return res.status(400).json({ message: 'No Google idToken provided' });
+        }
+
+        // Verify the token
+        const ticket = await googleClient.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        const { sub: googleId, email, name, picture } = payload;
+
+        // Check if user already exists
+        let user = await User.findOne({ 
+            $or: [
+                { googleId },
+                { email }
+            ]
+        });
+
+        if (user) {
+            // Update googleId if user existed by email but didn't have googleId yet
+            if (!user.googleId) {
+                user.googleId = googleId;
+                await user.save();
+            }
+        } else {
+            // Create user
+            user = await User.create({
+                name,
+                email,
+                googleId,
+                // password is not required since googleId is present
+            });
+        }
+
+        res.json({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            token: generateToken(user._id),
+            picture: picture // Optional: user picture from Google
+        });
+    } catch (error) {
+        console.error('Google Auth error:', error.message);
+        res.status(500).json({ message: 'Google authentication failed' });
+    }
+};
+
+module.exports = { registerUser, loginUser, getMe, googleAuth };
+
