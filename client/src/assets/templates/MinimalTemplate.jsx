@@ -1,5 +1,5 @@
 
-const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
+const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -18,11 +18,11 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
         <div className="max-w-4xl mx-auto p-8 bg-white text-gray-900 font-light" style={{ fontSize: fontSize || 16 }}>
             {/* Header */}
             <header className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
-                <h1 className="text-4xl font-thin mb-4 tracking-wide">
+                <h1 className="font-thin mb-4 tracking-wide" style={{ fontSize: headingSize || 28 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
 
-                <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+                <div className="flex flex-wrap gap-6 text-[0.875em] text-gray-600">
                     {data.personal_info?.email && <span>{data.personal_info.email}</span>}
                     {data.personal_info?.phone && <span>{data.personal_info.phone}</span>}
                     {data.personal_info?.location && <span>{data.personal_info.location}</span>}
@@ -47,7 +47,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
             {/* Experience */}
             {data.experience && data.experience.length > 0 && (
                 <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
-                    <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
+                    <h2 className="uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                         Experience
                     </h2>
 
@@ -56,7 +56,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
                             <div key={index}>
                                 <div className="flex justify-between items-baseline mb-1">
                                     <h3 className="text-lg font-medium">{exp.position}</h3>
-                                    <span className="text-sm text-gray-500">
+                                    <span className="text-[0.875em] text-gray-500">
                                         {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
@@ -75,7 +75,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
             {/* Projects */}
             {data.project && data.project.length > 0 && (
                 <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
-                    <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
+                    <h2 className="uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                         Projects
                     </h2>
 
@@ -93,7 +93,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
             {/* Education */}
             {data.education && data.education.length > 0 && (
                 <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
-                    <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
+                    <h2 className="uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                         Education
                     </h2>
 
@@ -105,9 +105,9 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
                                         {edu.degree} {edu.field && `in ${edu.field}`}
                                     </h3>
                                     <p className="text-gray-600">{edu.institution}</p>
-                                    {edu.gpa && <p className="text-sm text-gray-500">GPA: {edu.gpa}</p>}
+                                    {edu.gpa && <p className="text-[0.875em] text-gray-500">GPA: {edu.gpa}</p>}
                                 </div>
-                                <span className="text-sm text-gray-500">
+                                <span className="text-[0.875em] text-gray-500">
                                     {formatDate(edu.graduation_date)}
                                 </span>
                             </div>
@@ -119,7 +119,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
             {/* Skills */}
             {data.skills && data.skills.length > 0 && (
                 <section style={{ marginBottom: sectionSpacing || 40 }}>
-                    <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
+                    <h2 className="uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                         Skills
                     </h2>
 

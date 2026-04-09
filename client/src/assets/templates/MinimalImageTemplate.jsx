@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin } from "lucide-react";
 
-const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
+const MinimalImageTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -36,10 +36,10 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
 
                 {/* Name + Title */}
                 <div className="col-span-2 flex flex-col justify-center py-10 px-8">
-                    <h1 className="text-4xl font-bold text-zinc-700 tracking-widest">
+                    <h1 className="font-bold text-zinc-700 tracking-widest" style={{ fontSize: headingSize || 28 }}>
                         {data.personal_info?.full_name || "Your Name"}
                     </h1>
-                    <p className="uppercase text-zinc-600 font-medium text-sm tracking-widest">
+                    <p className="uppercase text-zinc-600 font-medium text-[0.875em] tracking-widest">
                         {data?.personal_info?.profession || "Profession"}
                     </p>
                 </div>
@@ -50,10 +50,10 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
 
                     {/* Contact */}
                     <section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
-                        <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
+                        <h2 className="font-semibold tracking-widest text-zinc-600 mb-3" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                             CONTACT
                         </h2>
-                        <div className="space-y-2 text-sm">
+                        <div className="space-y-2 text-[0.875em]">
                             {data.personal_info?.phone && (
                                 <div className="flex items-center gap-2">
                                     <Phone size={14} style={{ color: accentColor }} />
@@ -78,15 +78,15 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
                     {/* Education */}
                     {data.education && data.education.length > 0 && (
                         <section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
-                            <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
+                            <h2 className="font-semibold tracking-widest text-zinc-600 mb-3" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                                 EDUCATION
                             </h2>
-                            <div className="space-y-4 text-sm">
+                            <div className="space-y-4 text-[0.875em]">
                                 {data.education.map((edu, index) => (
                                     <div key={index}>
                                         <p className="font-semibold uppercase">{edu.degree}</p>
                                         <p className="text-zinc-600">{edu.institution}</p>
-                                        <p className="text-xs text-zinc-500">
+                                        <p className="text-[0.75em] text-zinc-500">
                                             {formatDate(edu.graduation_date)}
                                         </p>
                                     </div>
@@ -98,10 +98,10 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
                     {/* Skills */}
                     {data.skills && data.skills.length > 0 && (
                         <section>
-                            <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
+                            <h2 className="font-semibold tracking-widest text-zinc-600 mb-3" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                                 SKILLS
                             </h2>
-                            <ul className="space-y-1 text-sm">
+                            <ul className="space-y-1 text-[0.875em]">
                                 {data.skills.map((skill, index) => (
                                     <li key={index}>{skill}</li>
                                 ))}
@@ -116,7 +116,7 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
                     {/* Summary */}
                     {data.professional_summary && (
                         <section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
-                            <h2 className="text-sm font-semibold tracking-widest mb-3" style={{ color: accentColor }} >
+                            <h2 className="font-semibold tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }} >
                                 SUMMARY
                             </h2>
                             <p className="text-zinc-700 leading-relaxed">
@@ -128,7 +128,7 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
                     {/* Experience */}
                     {data.experience && data.experience.length > 0 && (
                         <section style={{ marginBottom: sectionSpacing || 32 }}>
-                            <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: accentColor }} >
+                            <h2 className="font-semibold tracking-widest mb-4" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }} >
                                 EXPERIENCE
                             </h2>
                             <div className="space-y-6 mb-8">
@@ -138,16 +138,16 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
                                             <h3 className="font-semibold text-zinc-900">
                                                 {exp.position}
                                             </h3>
-                                            <span className="text-xs text-zinc-500">
+                                            <span className="text-[0.75em] text-zinc-500">
                                                 {formatDate(exp.start_date)} -{" "}
                                                 {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                             </span>
                                         </div>
-                                        <p className="text-sm mb-2" style={{ color: accentColor }} >
+                                        <p className="text-[0.875em] mb-2" style={{ color: accentColor }} >
                                             {exp.company}
                                         </p>
                                         {exp.description && (
-                                            <ul className="list-disc list-inside text-sm text-zinc-700 leading-relaxed space-y-1">
+                                            <ul className="list-disc list-inside text-[0.875em] text-zinc-700 leading-relaxed space-y-1">
                                                 {exp.description.split("\n").map((line, i) => (
                                                     <li key={i}>{line}</li>
                                                 ))}
@@ -162,18 +162,18 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) =
                     {/* Projects */}
                     {data.project && data.project.length > 0 && (
                         <section style={{ marginBottom: sectionSpacing || 32 }}>
-                            <h2 className="text-sm uppercase tracking-widest font-semibold" style={{ color: accentColor }}>
+                            <h2 className="uppercase tracking-widest font-semibold" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                                 PROJECTS
                             </h2>
                             <div className="space-y-4">
                                 {data.project.map((project, index) => (
                                     <div key={index}>
                                         <h3 className="text-md font-medium text-zinc-800 mt-3">{project.name}</h3>
-                                        <p className="text-sm mb-1" style={{ color: accentColor }} >
+                                        <p className="text-[0.875em] mb-1" style={{ color: accentColor }} >
                                             {project.type}
                                         </p>
                                         {project.description && (
-                                            <ul className="list-disc list-inside text-sm text-zinc-700  space-y-1">
+                                            <ul className="list-disc list-inside text-[0.875em] text-zinc-700  space-y-1">
                                                 {project.description.split("\n").map((line, i) => (
                                                     <li key={i}>{line}</li>
                                                 ))}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing }) => {
+const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -36,8 +36,8 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
                 )}
 
                 <div>
-                    <h2 className="text-sm font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4">Contact</h2>
-                    <ul className="flex flex-col gap-3 text-sm text-white/90 break-words">
+                    <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
+                    <ul className="flex flex-col gap-3 text-[0.875em] text-white/90 break-words">
                         {data.personal_info?.email && (
                             <li className="flex items-start gap-2"><Mail className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.email}</span></li>
                         )}
@@ -58,13 +58,13 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
 
                 {data.education && data.education.length > 0 && (
                     <div>
-                        <h2 className="text-sm font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4">Education</h2>
+                        <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Education</h2>
                         <div className="flex flex-col gap-4">
                             {data.education.map((edu, idx) => (
                                 <div key={idx} className="flex flex-col gap-1">
                                     <h3 className="font-semibold text-white leading-tight">{edu.degree}</h3>
-                                    <span className="text-xs text-white/70 italic">{edu.institution}</span>
-                                    <span className="text-xs font-bold bg-white/10 w-fit px-2 py-0.5 rounded text-white/90 mt-1">{formatDate(edu.graduation_date)}</span>
+                                    <span className="text-[0.75em] text-white/70 italic">{edu.institution}</span>
+                                    <span className="text-[0.75em] font-bold bg-white/10 w-fit px-2 py-0.5 rounded text-white/90 mt-1">{formatDate(edu.graduation_date)}</span>
                                 </div>
                             ))}
                         </div>
@@ -73,10 +73,10 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
 
                 {data.skills && data.skills.length > 0 && (
                     <div>
-                        <h2 className="text-sm font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4">Core Skills</h2>
+                        <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Core Skills</h2>
                         <div className="flex flex-wrap gap-2">
                             {data.skills.map((skill, idx) => (
-                                <span key={idx} className="bg-white/10 border border-white/10 px-2.5 py-1 rounded text-xs font-medium text-white/90 shadow-sm">
+                                <span key={idx} className="bg-white/10 border border-white/10 px-2.5 py-1 rounded text-[0.75em] font-medium text-white/90 shadow-sm">
                                     {skill}
                                 </span>
                             ))}
@@ -89,11 +89,11 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
             <main className="flex-1 p-8 flex flex-col pt-12 bg-[#fafafa]">
                 
                 <header className="mb-8">
-                    <h1 className="text-5xl font-black uppercase text-gray-900 tracking-tighter mb-2" style={{ color: accentColor }}>
+                    <h1 className="font-black uppercase text-gray-900 tracking-tighter mb-2" style={{ color: accentColor, fontSize: headingSize || 36 }}>
                         {data.personal_info?.full_name || "YOUR NAME"}
                     </h1>
                     {data.experience?.[0]?.position && (
-                        <h2 className="text-xl font-medium uppercase tracking-widest" style={{ color: accentColor }}>
+                        <h2 className="font-medium uppercase tracking-widest" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.55 : 16 }}>
                             {data.experience[0].position}
                         </h2>
                     )}
@@ -102,7 +102,7 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
                 {data.professional_summary && (
                     <section className="mb-8 relative" style={{ marginBottom: sectionSpacing || 32 }}>
                         <div className="absolute -left-4 top-0 w-1.5 h-full rounded" style={{ backgroundColor: accentColor }}></div>
-                        <p className="text-sm text-gray-600 leading-loose italic font-medium">
+                        <p className="text-[0.875em] text-gray-600 leading-loose italic font-medium">
                             "{data.professional_summary}"
                         </p>
                     </section>
@@ -110,7 +110,7 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
 
                 {data.experience && data.experience.length > 0 && (
                     <section style={{ marginBottom: sectionSpacing || 32 }}>
-                        <h2 className="text-lg font-extrabold uppercase tracking-widest mb-6 pb-2 border-b-2 border-gray-200" style={{ color: accentColor }}>
+                        <h2 className="font-extrabold uppercase tracking-widest mb-6 pb-2 border-b-2 border-gray-200" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 14 }}>
                             Professional Experience
                         </h2>
                         <div className="flex flex-col gap-6">
@@ -118,17 +118,17 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpaci
                                 <div key={idx} className="flex flex-col">
                                     <div className="flex justify-between items-baseline mb-1">
                                         <h3 className="text-lg font-bold text-gray-800">{exp.position}</h3>
-                                        <span className="text-xs font-bold uppercase tracking-wider px-2 py-1 bg-gray-200 text-gray-600 rounded drop-shadow-sm">
+                                        <span className="text-[0.75em] font-bold uppercase tracking-wider px-2 py-1 bg-gray-200 text-gray-600 rounded drop-shadow-sm">
                                             {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                         </span>
                                     </div>
-                                    <h4 className="text-sm font-bold uppercase tracking-wide mb-3" style={{ color: accentColor }}>
+                                    <h4 className="text-[0.875em] font-bold uppercase tracking-wide mb-3" style={{ color: accentColor }}>
                                         {exp.link
                                             ? <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:underline">{exp.company} ↗</a>
                                             : exp.company
                                         }
                                     </h4>
-                                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap font-medium">
+                                    <p className="text-[0.875em] text-gray-700 leading-relaxed whitespace-pre-wrap font-medium">
                                         {exp.description}
                                     </p>
                                 </div>

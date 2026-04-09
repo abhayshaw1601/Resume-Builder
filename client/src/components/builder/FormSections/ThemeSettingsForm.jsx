@@ -29,7 +29,7 @@ export const getAccentSolidColor = (value) => {
     return value
 }
 
-const ThemeSettingsForm = ({ accentColor, fontSize, sectionSpacing, setResumeData }) => {
+const ThemeSettingsForm = ({ accentColor, fontSize, headingSize, sectionSpacing, setResumeData }) => {
     const [customColor, setCustomColor] = useState(
         accentColor?.startsWith('linear-gradient') ? '#A6FF5D' : (accentColor || '#A6FF5D')
     )
@@ -60,7 +60,7 @@ const ThemeSettingsForm = ({ accentColor, fontSize, sectionSpacing, setResumeDat
                     </div>
                     <input 
                         type="range" 
-                        min="12" 
+                        min="5" 
                         max="24" 
                         step="1"
                         value={fontSize || 16}
@@ -69,6 +69,26 @@ const ThemeSettingsForm = ({ accentColor, fontSize, sectionSpacing, setResumeDat
                     />
                     <div className="flex justify-between text-[10px] text-gray-600 uppercase font-medium">
                         <span>Compact</span>
+                        <span>Large</span>
+                    </div>
+                </div>
+
+                <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                        <label className="text-xs uppercase tracking-widest text-gray-400 font-bold">Heading Size</label>
+                        <span className="text-xs font-mono text-[#A6FF5D] bg-[#A6FF5D]/10 px-2 py-0.5 rounded">{headingSize || 24}px</span>
+                    </div>
+                    <input 
+                        type="range" 
+                        min="10" 
+                        max="36" 
+                        step="1"
+                        value={headingSize || 24}
+                        onChange={(e) => handleLayoutChange('heading_size', e.target.value)}
+                        className="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[#A6FF5D]"
+                    />
+                    <div className="flex justify-between text-[10px] text-gray-600 uppercase font-medium">
+                        <span>Small</span>
                         <span>Large</span>
                     </div>
                 </div>

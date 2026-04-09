@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing }) => {
+const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -24,16 +24,16 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacin
             <div className="grid grid-cols-3 gap-3 auto-rows-auto">
                 {/* Header Card - Span 2 */}
                 <Card span={2}>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                    <h1 className="font-bold text-gray-900 mb-1" style={{ fontSize: headingSize || 24 }}>
                         {data.personal_info?.full_name || "Your Name"}
                     </h1>
                     {data.experience?.[0]?.position && (
-                        <p className="text-sm font-medium mb-3" style={{ color: accentColor }}>
+                        <p className="text-[0.875em] font-medium mb-3" style={{ color: accentColor }}>
                             {data.experience[0].position}
                         </p>
                     )}
                     {data.professional_summary && (
-                        <p className="text-sm text-gray-600 leading-relaxed">{data.professional_summary}</p>
+                        <p className="text-[0.875em] text-gray-600 leading-relaxed">{data.professional_summary}</p>
                     )}
                 </Card>
 
@@ -41,8 +41,8 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacin
                 <Card className="text-white" span={1}>
                     <div className="h-full rounded-lg p-1" style={{ background: accentBg || accentColor }}>
                         <div className="p-3">
-                            <h2 className="text-xs font-bold uppercase tracking-widest mb-3 text-white/80">Contact</h2>
-                            <ul className="space-y-2 text-xs">
+                            <h2 className="font-bold uppercase tracking-widest mb-3 text-white/80" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
+                            <ul className="space-y-2 text-[0.75em]">
                                 {data.personal_info?.email && (
                                     <li className="flex items-center gap-2"><Mail size={11} className="opacity-70" />{data.personal_info.email}</li>
                                 )}
@@ -66,10 +66,10 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacin
                 {/* Skills Card - Span 2 */}
                 {data.skills?.length > 0 && (
                     <Card span={2}>
-                        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: accentColor }}>Skills</h2>
+                        <h2 className="font-bold uppercase tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>Skills</h2>
                         <div className="flex flex-wrap gap-1.5">
                             {data.skills.map((skill, i) => (
-                                <span key={i} className="px-2.5 py-1 rounded-lg text-xs font-medium"
+                                <span key={i} className="px-2.5 py-1 rounded-lg text-[0.75em] font-medium"
                                     style={{ backgroundColor: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}25` }}>
                                     {skill}
                                 </span>
@@ -81,14 +81,14 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacin
                 {/* Education Card */}
                 {data.education?.length > 0 && (
                     <Card span={1}>
-                        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: accentColor }}>Education</h2>
+                        <h2 className="font-bold uppercase tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>Education</h2>
                         <div className="space-y-3">
                             {data.education.map((edu, i) => (
                                 <div key={i}>
-                                    <p className="font-semibold text-gray-900 text-sm">{edu.degree}</p>
-                                    <p className="text-xs" style={{ color: accentColor }}>{edu.institution}</p>
-                                    <p className="text-[11px] text-gray-400">{formatDate(edu.graduation_date)}</p>
-                                    {edu.gpa && <p className="text-[11px] text-gray-400">GPA: {edu.gpa}</p>}
+                                    <p className="font-semibold text-gray-900 text-[0.875em]">{edu.degree}</p>
+                                    <p className="text-[0.75em]" style={{ color: accentColor }}>{edu.institution}</p>
+                                    <p className="text-[0.6875em] text-gray-400">{formatDate(edu.graduation_date)}</p>
+                                    {edu.gpa && <p className="text-[0.6875em] text-gray-400">GPA: {edu.gpa}</p>}
                                 </div>
                             ))}
                         </div>
@@ -98,21 +98,21 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacin
                 {/* Experience Card - Span 3 (full width) */}
                 {data.experience?.length > 0 && (
                     <Card span={3}>
-                        <h2 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: accentColor }}>Experience</h2>
+                        <h2 className="font-bold uppercase tracking-widest mb-4" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>Experience</h2>
                         <div className="grid grid-cols-2 gap-4">
                             {data.experience.map((exp, i) => (
                                 <div key={i} className="border-l-3 pl-3" style={{ borderColor: accentColor }}>
-                                    <h3 className="font-bold text-gray-900 text-sm">{exp.position}</h3>
-                                    <p className="text-xs font-medium" style={{ color: accentColor }}>
+                                    <h3 className="font-bold text-gray-900 text-[0.875em]">{exp.position}</h3>
+                                    <p className="text-[0.75em] font-medium" style={{ color: accentColor }}>
                                         {exp.link
                                             ? <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:underline">{exp.company} ↗</a>
                                             : exp.company}
                                     </p>
-                                    <p className="text-[11px] text-gray-400 mb-1">
+                                    <p className="text-[0.6875em] text-gray-400 mb-1">
                                         {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </p>
                                     {exp.description && (
-                                        <p className="text-xs text-gray-600 line-clamp-3 whitespace-pre-line">{exp.description}</p>
+                                        <p className="text-[0.75em] text-gray-600 line-clamp-3 whitespace-pre-line">{exp.description}</p>
                                     )}
                                 </div>
                             ))}
@@ -123,16 +123,16 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacin
                 {/* Projects Card - Span 3 (full width) */}
                 {data.project?.length > 0 && (
                     <Card span={3}>
-                        <h2 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: accentColor }}>Projects</h2>
+                        <h2 className="font-bold uppercase tracking-widest mb-4" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>Projects</h2>
                         <div className="grid grid-cols-3 gap-3">
                             {data.project.map((p, i) => (
                                 <div key={i} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
                                     <div className="flex items-center gap-1.5">
-                                        <h3 className="font-semibold text-gray-900 text-sm">{p.name}</h3>
-                                        {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[10px] hover:underline" style={{ color: accentColor }}>↗</a>}
+                                        <h3 className="font-semibold text-gray-900 text-[0.875em]">{p.name}</h3>
+                                        {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                     </div>
-                                    {p.type && <p className="text-[10px] text-gray-400 mb-1">{p.type}</p>}
-                                    {p.description && <p className="text-xs text-gray-600 line-clamp-2">{p.description}</p>}
+                                    {p.type && <p className="text-[0.625em] text-gray-400 mb-1">{p.type}</p>}
+                                    {p.description && <p className="text-[0.75em] text-gray-600 line-clamp-2">{p.description}</p>}
                                 </div>
                             ))}
                         </div>

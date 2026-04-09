@@ -60,6 +60,7 @@ const FormEditor = ({ resumeData, setResumeData }) => {
         <ThemeSettingsForm 
           accentColor={resumeData.accent_color} 
           fontSize={resumeData.font_size}
+          headingSize={resumeData.heading_size}
           sectionSpacing={resumeData.section_spacing}
           setResumeData={setResumeData} 
         />

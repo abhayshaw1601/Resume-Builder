@@ -74,6 +74,7 @@ const ResumePreview = ({ resumeData }) => {
         accentColor, 
         accentBg, 
         fontSize: resumeData.font_size || 16,
+        headingSize: resumeData.heading_size || 24,
         sectionSpacing: resumeData.section_spacing || 24
     }
     switch(templateId) {

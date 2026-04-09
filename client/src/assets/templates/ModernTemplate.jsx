@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing }) => {
+const ModernTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
 	const formatDate = (dateStr) => {
 		if (!dateStr || dateStr === "Invalid Date") return "";
 		try {
@@ -19,11 +19,11 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 		<div className="max-w-4xl mx-auto bg-white text-gray-800" style={{ fontSize: fontSize || 16 }}>
 			{/* Header */}
 		<header className="p-8 text-white" style={{ background: accentBg || accentColor }}>
-				<h1 className="text-4xl font-light mb-3">
+				<h1 className="font-light mb-3" style={{ fontSize: headingSize || 28 }}>
 					{data.personal_info?.full_name || "Your Name"}
 				</h1>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm ">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[0.875em] ">
 					{data.personal_info?.email && (
 						<div className="flex items-center gap-2">
 							<Mail className="size-4" />
@@ -45,13 +45,13 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 					{data.personal_info?.linkedin && (
 						<a target="_blank" href={data.personal_info?.linkedin} className="flex items-center gap-2">
 							<Link className="size-4" />
-							<span className="break-all text-xs">{data.personal_info.linkedin.split("https://www.")[1] ? data.personal_info.linkedin.split("https://www.")[1] : data.personal_info.linkedin}</span>
+							<span className="break-all text-[0.75em]">{data.personal_info.linkedin.split("https://www.")[1] ? data.personal_info.linkedin.split("https://www.")[1] : data.personal_info.linkedin}</span>
 						</a>
 					)}
 					{data.personal_info?.website && (
 						<a target="_blank" href={data.personal_info?.website} className="flex items-center gap-2">
 							<Globe className="size-4" />
-							<span className="break-all text-xs">{data.personal_info.website.split("https://")[1] ? data.personal_info.website.split("https://")[1] : data.personal_info.website}</span>
+							<span className="break-all text-[0.75em]">{data.personal_info.website.split("https://")[1] ? data.personal_info.website.split("https://")[1] : data.personal_info.website}</span>
 						</a>
 					)}
 				</div>
@@ -61,7 +61,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 				{/* Professional Summary */}
 				{data.professional_summary && (
 					<section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
-						<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
+						<h2 className="font-light mb-4 pb-2 border-b border-gray-200" style={{ fontSize: headingSize ? headingSize * 0.65 : 18 }}>
 							Professional Summary
 						</h2>
 						<p className="text-gray-700 ">{data.professional_summary}</p>
@@ -71,7 +71,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 				{/* Experience */}
 				{data.experience && data.experience.length > 0 && (
 					<section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
-						<h2 className="text-2xl font-light mb-6 pb-2 border-b border-gray-200">
+						<h2 className="font-light mb-6 pb-2 border-b border-gray-200" style={{ fontSize: headingSize ? headingSize * 0.65 : 18 }}>
 							Experience
 						</h2>
 
@@ -89,7 +89,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 												}
 											</p>
 										</div>
-										<div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded">
+										<div className="text-[0.875em] text-gray-500 bg-gray-100 px-3 py-1 rounded">
 											{formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
 										</div>
 									</div>
@@ -107,7 +107,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 				{/* Projects */}
 				{data.project && data.project.length > 0 && (
 					<section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
-						<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
+						<h2 className="font-light mb-4 pb-2 border-b border-gray-200" style={{ fontSize: headingSize ? headingSize * 0.65 : 18 }}>
 							Projects
 						</h2>
 
@@ -117,12 +117,12 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 									<div className="flex items-center gap-2">
 										<h3 className="text-lg font-medium text-gray-900">{p.name}</h3>
 										{p.link && (
-											<a href={p.link} target="_blank" rel="noopener noreferrer" style={{ color: accentColor }} className="text-xs hover:underline">↗ Link</a>
+											<a href={p.link} target="_blank" rel="noopener noreferrer" style={{ color: accentColor }} className="text-[0.75em] hover:underline">↗ Link</a>
 										)}
 									</div>
-									{p.type && <p className="text-xs text-gray-400 mb-1">{p.type}</p>}
+									{p.type && <p className="text-[0.75em] text-gray-400 mb-1">{p.type}</p>}
 									{p.description && (
-										<div className="text-gray-700 leading-relaxed text-sm mt-3">{p.description}</div>
+										<div className="text-gray-700 leading-relaxed text-[0.875em] mt-3">{p.description}</div>
 									)}
 								</div>
 							))}
@@ -134,7 +134,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 					{/* Education */}
 					{data.education && data.education.length > 0 && (
 						<section>
-							<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
+							<h2 className="font-light mb-4 pb-2 border-b border-gray-200" style={{ fontSize: headingSize ? headingSize * 0.65 : 18 }}>
 								Education
 							</h2>
 
@@ -145,7 +145,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 											{edu.degree} {edu.field && `in ${edu.field}`}
 										</h3>
 										<p style={{ color: accentColor }}>{edu.institution}</p>
-										<div className="flex justify-between items-center text-sm text-gray-600">
+										<div className="flex justify-between items-center text-[0.875em] text-gray-600">
 											<span>{formatDate(edu.graduation_date)}</span>
 											{edu.gpa && <span>GPA: {edu.gpa}</span>}
 										</div>
@@ -158,7 +158,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 					{/* Skills */}
 					{data.skills && data.skills.length > 0 && (
 						<section>
-							<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
+							<h2 className="font-light mb-4 pb-2 border-b border-gray-200" style={{ fontSize: headingSize ? headingSize * 0.65 : 18 }}>
 								Skills
 							</h2>
 
@@ -166,7 +166,7 @@ const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing 
 								{data.skills.map((skill, index) => (
 									<span
 										key={index}
-										className="px-3 py-1 text-sm text-white rounded-full"
+										className="px-3 py-1 text-[0.875em] text-white rounded-full"
 										style={{ backgroundColor: accentColor }}
 									>
 										{skill}
