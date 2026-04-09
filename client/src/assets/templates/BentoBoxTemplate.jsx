@@ -1,0 +1,146 @@
+import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+
+const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing }) => {
+    const formatDate = (dateStr) => {
+        if (!dateStr || dateStr === "Invalid Date") return "";
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleDateString("en-US", { year: "numeric", month: "short" });
+        } catch (e) { return dateStr; }
+    };
+
+    const Card = ({ children, className = "", span = 1 }) => (
+        <div
+            className={`bg-white rounded-xl border border-gray-100 p-5 shadow-sm ${className}`}
+            style={{ gridColumn: span > 1 ? `span ${span}` : undefined }}
+        >
+            {children}
+        </div>
+    );
+
+    return (
+        <div className="w-full bg-gray-50 p-6" style={{ fontSize: fontSize || 14 }}>
+            <div className="grid grid-cols-3 gap-3 auto-rows-auto">
+                {/* Header Card - Span 2 */}
+                <Card span={2}>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-1">
+                        {data.personal_info?.full_name || "Your Name"}
+                    </h1>
+                    {data.experience?.[0]?.position && (
+                        <p className="text-sm font-medium mb-3" style={{ color: accentColor }}>
+                            {data.experience[0].position}
+                        </p>
+                    )}
+                    {data.professional_summary && (
+                        <p className="text-sm text-gray-600 leading-relaxed">{data.professional_summary}</p>
+                    )}
+                </Card>
+
+                {/* Contact Card */}
+                <Card className="text-white" span={1}>
+                    <div className="h-full rounded-lg p-1" style={{ background: accentBg || accentColor }}>
+                        <div className="p-3">
+                            <h2 className="text-xs font-bold uppercase tracking-widest mb-3 text-white/80">Contact</h2>
+                            <ul className="space-y-2 text-xs">
+                                {data.personal_info?.email && (
+                                    <li className="flex items-center gap-2"><Mail size={11} className="opacity-70" />{data.personal_info.email}</li>
+                                )}
+                                {data.personal_info?.phone && (
+                                    <li className="flex items-center gap-2"><Phone size={11} className="opacity-70" />{data.personal_info.phone}</li>
+                                )}
+                                {data.personal_info?.location && (
+                                    <li className="flex items-center gap-2"><MapPin size={11} className="opacity-70" />{data.personal_info.location}</li>
+                                )}
+                                {data.personal_info?.linkedin && (
+                                    <li className="flex items-start gap-2"><Link size={11} className="opacity-70 mt-0.5 shrink-0" /><span className="break-all">{data.personal_info.linkedin}</span></li>
+                                )}
+                                {data.personal_info?.website && (
+                                    <li className="flex items-start gap-2"><Globe size={11} className="opacity-70 mt-0.5 shrink-0" /><span className="break-all">{data.personal_info.website}</span></li>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
+                </Card>
+
+                {/* Skills Card - Span 2 */}
+                {data.skills?.length > 0 && (
+                    <Card span={2}>
+                        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: accentColor }}>Skills</h2>
+                        <div className="flex flex-wrap gap-1.5">
+                            {data.skills.map((skill, i) => (
+                                <span key={i} className="px-2.5 py-1 rounded-lg text-xs font-medium"
+                                    style={{ backgroundColor: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}25` }}>
+                                    {skill}
+                                </span>
+                            ))}
+                        </div>
+                    </Card>
+                )}
+
+                {/* Education Card */}
+                {data.education?.length > 0 && (
+                    <Card span={1}>
+                        <h2 className="text-xs font-bold uppercase tracking-widest mb-3" style={{ color: accentColor }}>Education</h2>
+                        <div className="space-y-3">
+                            {data.education.map((edu, i) => (
+                                <div key={i}>
+                                    <p className="font-semibold text-gray-900 text-sm">{edu.degree}</p>
+                                    <p className="text-xs" style={{ color: accentColor }}>{edu.institution}</p>
+                                    <p className="text-[11px] text-gray-400">{formatDate(edu.graduation_date)}</p>
+                                    {edu.gpa && <p className="text-[11px] text-gray-400">GPA: {edu.gpa}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                )}
+
+                {/* Experience Card - Span 3 (full width) */}
+                {data.experience?.length > 0 && (
+                    <Card span={3}>
+                        <h2 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: accentColor }}>Experience</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            {data.experience.map((exp, i) => (
+                                <div key={i} className="border-l-3 pl-3" style={{ borderColor: accentColor }}>
+                                    <h3 className="font-bold text-gray-900 text-sm">{exp.position}</h3>
+                                    <p className="text-xs font-medium" style={{ color: accentColor }}>
+                                        {exp.link
+                                            ? <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:underline">{exp.company} ↗</a>
+                                            : exp.company}
+                                    </p>
+                                    <p className="text-[11px] text-gray-400 mb-1">
+                                        {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
+                                    </p>
+                                    {exp.description && (
+                                        <p className="text-xs text-gray-600 line-clamp-3 whitespace-pre-line">{exp.description}</p>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                )}
+
+                {/* Projects Card - Span 3 (full width) */}
+                {data.project?.length > 0 && (
+                    <Card span={3}>
+                        <h2 className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: accentColor }}>Projects</h2>
+                        <div className="grid grid-cols-3 gap-3">
+                            {data.project.map((p, i) => (
+                                <div key={i} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                                    <div className="flex items-center gap-1.5">
+                                        <h3 className="font-semibold text-gray-900 text-sm">{p.name}</h3>
+                                        {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[10px] hover:underline" style={{ color: accentColor }}>↗</a>}
+                                    </div>
+                                    {p.type && <p className="text-[10px] text-gray-400 mb-1">{p.type}</p>}
+                                    {p.description && <p className="text-xs text-gray-600 line-clamp-2">{p.description}</p>}
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default BentoBoxTemplate;

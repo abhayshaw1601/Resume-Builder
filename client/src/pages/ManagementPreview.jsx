@@ -7,6 +7,16 @@ import ModernTemplate from '../assets/templates/ModernTemplate'
 import MinimalTemplate from '../assets/templates/MinimalTemplate'
 import MinimalImageTemplate from '../assets/templates/MinimalImageTemplate'
 import ExecutiveTemplate from '../assets/templates/ExecutiveTemplate'
+import StandardATSTemplate from '../assets/templates/StandardATSTemplate'
+import GitHubDarkTemplate from '../assets/templates/GitHubDarkTemplate'
+import ModernMonoTemplate from '../assets/templates/ModernMonoTemplate'
+import SplitScreenTemplate from '../assets/templates/SplitScreenTemplate'
+import BentoBoxTemplate from '../assets/templates/BentoBoxTemplate'
+import TimelineTemplate from '../assets/templates/TimelineTemplate'
+import TerminalTemplate from '../assets/templates/TerminalTemplate'
+import AcademicCVTemplate from '../assets/templates/AcademicCVTemplate'
+import InfographicTemplate from '../assets/templates/InfographicTemplate'
+import PitchDeckTemplate from '../assets/templates/PitchDeckTemplate'
 import { getAccentSolidColor } from '../components/builder/FormSections/ThemeSettingsForm'
 
 const ManagementPreview = () => {
@@ -64,6 +74,16 @@ const ManagementPreview = () => {
             case 'minimal-text': return <MinimalTemplate {...props} />
             case 'minimal-image': return <MinimalImageTemplate {...props} />
             case 'executive': return <ExecutiveTemplate {...props} />
+            case 'standard-ats': return <StandardATSTemplate {...props} />
+            case 'github-dark': return <GitHubDarkTemplate {...props} />
+            case 'modern-mono': return <ModernMonoTemplate {...props} />
+            case 'split-screen': return <SplitScreenTemplate {...props} />
+            case 'bento-box': return <BentoBoxTemplate {...props} />
+            case 'timeline': return <TimelineTemplate {...props} />
+            case 'terminal': return <TerminalTemplate {...props} />
+            case 'academic-cv': return <AcademicCVTemplate {...props} />
+            case 'infographic': return <InfographicTemplate {...props} />
+            case 'pitch-deck': return <PitchDeckTemplate {...props} />
             default: return <ClassicTemplate {...props} />
         }
     }

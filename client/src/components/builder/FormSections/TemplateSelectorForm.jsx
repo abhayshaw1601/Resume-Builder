@@ -7,7 +7,17 @@ const TemplateSelectorForm = ({ currentTemplate, setResumeData }) => {
         { id: 'modern', name: 'Modern Minimal' },
         { id: 'minimal-text', name: 'Text Heavy' },
         { id: 'minimal-image', name: 'Minimal Portrait' },
-        { id: 'executive', name: 'Executive Split' }
+        { id: 'executive', name: 'Executive Split' },
+        { id: 'standard-ats', name: 'Standard ATS' },
+        { id: 'github-dark', name: 'GitHub Dark' },
+        { id: 'modern-mono', name: 'Modern Mono' },
+        { id: 'split-screen', name: 'Split Screen' },
+        { id: 'bento-box', name: 'Bento Box' },
+        { id: 'timeline', name: 'Timeline' },
+        { id: 'terminal', name: 'Terminal' },
+        { id: 'academic-cv', name: 'Academic CV' },
+        { id: 'infographic', name: 'Infographic' },
+        { id: 'pitch-deck', name: 'Pitch Deck' }
     ]
 
     const handleSelect = (id) => {

@@ -6,6 +6,16 @@ import ModernTemplate from '../assets/templates/ModernTemplate'
 import MinimalTemplate from '../assets/templates/MinimalTemplate'
 import MinimalImageTemplate from '../assets/templates/MinimalImageTemplate'
 import ExecutiveTemplate from '../assets/templates/ExecutiveTemplate'
+import StandardATSTemplate from '../assets/templates/StandardATSTemplate'
+import GitHubDarkTemplate from '../assets/templates/GitHubDarkTemplate'
+import ModernMonoTemplate from '../assets/templates/ModernMonoTemplate'
+import SplitScreenTemplate from '../assets/templates/SplitScreenTemplate'
+import BentoBoxTemplate from '../assets/templates/BentoBoxTemplate'
+import TimelineTemplate from '../assets/templates/TimelineTemplate'
+import TerminalTemplate from '../assets/templates/TerminalTemplate'
+import AcademicCVTemplate from '../assets/templates/AcademicCVTemplate'
+import InfographicTemplate from '../assets/templates/InfographicTemplate'
+import PitchDeckTemplate from '../assets/templates/PitchDeckTemplate'
 import { getAccentSolidColor } from '../components/builder/FormSections/ThemeSettingsForm'
 
 const Preview = () => {
@@ -47,7 +57,6 @@ const Preview = () => {
         const accentColor = getAccentSolidColor(rawAccent)
         const accentBg = rawAccent
         const templateId = resume.template || 'classic'
-
         const props = { data: resume, accentColor, accentBg }
 
         switch (templateId) {
@@ -56,6 +65,16 @@ const Preview = () => {
             case 'minimal-text': return <MinimalTemplate {...props} />
             case 'minimal-image': return <MinimalImageTemplate {...props} />
             case 'executive': return <ExecutiveTemplate {...props} />
+            case 'standard-ats': return <StandardATSTemplate {...props} />
+            case 'github-dark': return <GitHubDarkTemplate {...props} />
+            case 'modern-mono': return <ModernMonoTemplate {...props} />
+            case 'split-screen': return <SplitScreenTemplate {...props} />
+            case 'bento-box': return <BentoBoxTemplate {...props} />
+            case 'timeline': return <TimelineTemplate {...props} />
+            case 'terminal': return <TerminalTemplate {...props} />
+            case 'academic-cv': return <AcademicCVTemplate {...props} />
+            case 'infographic': return <InfographicTemplate {...props} />
+            case 'pitch-deck': return <PitchDeckTemplate {...props} />
             default: return <ClassicTemplate {...props} />
         }
     }
@@ -115,6 +134,13 @@ const Preview = () => {
         )
     }
 
+    // Check if template needs full-page rendering (new templates)
+    const isFullPageTemplate = [
+        'standard-ats', 'github-dark', 'modern-mono', 'split-screen', 
+        'bento-box', 'timeline', 'terminal', 'academic-cv', 
+        'infographic', 'pitch-deck'
+    ].includes(resume.template || 'classic')
+
     // ─── Resume View ─────────────────────────────────────────
     return (
         <div className="min-h-screen bg-black">
@@ -157,21 +183,29 @@ const Preview = () => {
             </div>
 
             {/* Resume Document */}
-            <div className="max-w-5xl mx-auto py-8 sm:py-12 px-4 preview-container">
-                <div className="bg-gray-900/40 rounded-2xl p-4 sm:p-8 border border-white/10 shadow-inner">
-                    <div className="flex justify-center">
-                        <div
-                            className="bg-white text-gray-900 shadow-2xl flex flex-col shrink-0 transition-all duration-300 print:shadow-none print:m-0 resume-paper"
-                            style={{
-                                width: '210mm',
-                                minHeight: '297mm',
-                            }}
-                        >
-                            {renderTemplate()}
+            {isFullPageTemplate ? (
+                // Full-page templates render without A4 container
+                <div className="preview-container">
+                    {renderTemplate()}
+                </div>
+            ) : (
+                // Classic templates use A4 paper container
+                <div className="max-w-5xl mx-auto py-8 sm:py-12 px-4 preview-container">
+                    <div className="bg-gray-900/40 rounded-2xl p-4 sm:p-8 border border-white/10 shadow-inner">
+                        <div className="flex justify-center">
+                            <div
+                                className="bg-white text-gray-900 shadow-2xl flex flex-col shrink-0 transition-all duration-300 print:shadow-none print:m-0 resume-paper"
+                                style={{
+                                    width: '210mm',
+                                    minHeight: '297mm',
+                                }}
+                            >
+                                {renderTemplate()}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     )
 }
