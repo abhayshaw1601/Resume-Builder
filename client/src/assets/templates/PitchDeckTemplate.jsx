@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const PitchDeckTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -49,7 +49,7 @@ const PitchDeckTemplate = ({ data, accentColor, accentBg, fontSize, headingSize,
             <div className="px-8 pb-8 space-y-6">
                 {/* Summary */}
                 {data.professional_summary && (
-                    <section className="bg-white/5 backdrop-blur-sm rounded-xl p-5 border border-white/10" style={{ marginBottom: (sectionSpacing || 24) - 16 }}>
+                    <section className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/5 backdrop-blur-sm rounded-xl p-5 border border-white/10`} style={{ marginBottom: (sectionSpacing || 24) - 16 }}>
                         <p className="text-[0.875em] text-gray-300 leading-relaxed text-center italic max-w-2xl mx-auto">
                             "{data.professional_summary}"
                         </p>
@@ -64,10 +64,10 @@ const PitchDeckTemplate = ({ data, accentColor, accentBg, fontSize, headingSize,
                         </h2>
                         <div className="space-y-3">
                             {data.experience.map((exp, i) => (
-                                <div key={i} className="bg-white/5 rounded-xl p-5 border border-white/10">
+                                <div key={i} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/5 rounded-xl p-5 border border-white/10`}>
                                     <div className="flex justify-between items-baseline">
                                         <h3 className="text-lg font-bold text-white">{exp.position}</h3>
-                                        <span className="text-[0.6875em] text-gray-500 whitespace-nowrap ml-4 font-mono">
+                                        <span className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4 font-mono`}>
                                             {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                         </span>
                                     </div>
@@ -100,12 +100,12 @@ const PitchDeckTemplate = ({ data, accentColor, accentBg, fontSize, headingSize,
                         </h2>
                         <div className="grid grid-cols-2 gap-3">
                             {data.project.map((p, i) => (
-                                <div key={i} className="bg-white/5 rounded-xl p-4 border border-white/10">
+                                <div key={i} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/5 rounded-xl p-4 border border-white/10`}>
                                     <div className="flex items-center gap-2">
                                         <h3 className="font-bold text-white text-[0.875em]">{p.name}</h3>
                                         {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                     </div>
-                                    {p.type && <p className="text-[0.6875em] text-gray-500">{p.type}</p>}
+                                    {p.type && <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{p.type}</p>}
                                     {p.description && <p className="text-[0.75em] text-gray-400 mt-1 line-clamp-2">{p.description}</p>}
                                 </div>
                             ))}
@@ -117,7 +117,7 @@ const PitchDeckTemplate = ({ data, accentColor, accentBg, fontSize, headingSize,
                 <div className="grid grid-cols-2 gap-4">
                     {/* Skills */}
                     {data.skills?.length > 0 && (
-                        <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+                        <div className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/5 rounded-xl p-5 border border-white/10`}>
                             <h2 className="font-black uppercase tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.55 : 14 }}>Skills</h2>
                             <div className="flex flex-wrap gap-1.5">
                                 {data.skills.map((skill, i) => (
@@ -132,15 +132,15 @@ const PitchDeckTemplate = ({ data, accentColor, accentBg, fontSize, headingSize,
 
                     {/* Education */}
                     {data.education?.length > 0 && (
-                        <div className="bg-white/5 rounded-xl p-5 border border-white/10">
+                        <div className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/5 rounded-xl p-5 border border-white/10`}>
                             <h2 className="font-black uppercase tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.55 : 14 }}>Education</h2>
                             <div className="space-y-3">
                                 {data.education.map((edu, i) => (
                                     <div key={i}>
                                         <p className="font-semibold text-white text-[0.875em]">{edu.degree} {edu.field && `— ${edu.field}`}</p>
                                         <p className="text-[0.75em]" style={{ color: accentColor }}>{edu.institution}</p>
-                                        <p className="text-[0.6875em] text-gray-500">{formatDate(edu.graduation_date)}</p>
-                                        {edu.gpa && <p className="text-[0.6875em] text-gray-500">GPA: {edu.gpa}</p>}
+                                        <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{formatDate(edu.graduation_date)}</p>
+                                        {edu.gpa && <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
                                     </div>
                                 ))}
                             </div>

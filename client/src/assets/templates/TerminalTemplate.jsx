@@ -1,4 +1,4 @@
-const TerminalTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const TerminalTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {

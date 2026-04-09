@@ -1,5 +1,5 @@
 
-const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpacing }) => {
+const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -15,14 +15,14 @@ const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpac
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-8 bg-white text-gray-900 font-light" style={{ fontSize: fontSize || 16 }}>
+        <div className={`max-w-4xl mx-auto p-8 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} font-light`} style={{ fontSize: fontSize || 16 }}>
             {/* Header */}
             <header className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
                 <h1 className="font-thin mb-4 tracking-wide" style={{ fontSize: headingSize || 28 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
 
-                <div className="flex flex-wrap gap-6 text-[0.875em] text-gray-600">
+                <div className={`flex flex-wrap gap-6 text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {data.personal_info?.email && <span>{data.personal_info.email}</span>}
                     {data.personal_info?.phone && <span>{data.personal_info.phone}</span>}
                     {data.personal_info?.location && <span>{data.personal_info.location}</span>}
@@ -38,7 +38,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpac
             {/* Professional Summary */}
             {data.professional_summary && (
                 <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
-                    <p className=" text-gray-700">
+                    <p className={` ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         {data.professional_summary}
                     </p>
                 </section>
@@ -56,13 +56,13 @@ const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpac
                             <div key={index}>
                                 <div className="flex justify-between items-baseline mb-1">
                                     <h3 className="text-lg font-medium">{exp.position}</h3>
-                                    <span className="text-[0.875em] text-gray-500">
+                                    <span className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>
                                         {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
-                                <p className="text-gray-600 mb-2">{exp.company}</p>
+                                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>{exp.company}</p>
                                 {exp.description && (
-                                    <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                                    <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed whitespace-pre-line`}>
                                         {exp.description}
                                     </div>
                                 )}
@@ -83,7 +83,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpac
                         {data.project.map((proj, index) => (
                             <div key={index} className="flex flex-col gap-2 justify-between items-baseline">
                                 <h3 className="text-lg font-medium ">{proj.name}</h3>
-                                <p className="text-gray-600">{proj.description}</p>
+                                <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{proj.description}</p>
                             </div>
                         ))}
                     </div>
@@ -104,10 +104,10 @@ const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpac
                                     <h3 className="font-medium">
                                         {edu.degree} {edu.field && `in ${edu.field}`}
                                     </h3>
-                                    <p className="text-gray-600">{edu.institution}</p>
-                                    {edu.gpa && <p className="text-[0.875em] text-gray-500">GPA: {edu.gpa}</p>}
+                                    <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{edu.institution}</p>
+                                    {edu.gpa && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
                                 </div>
-                                <span className="text-[0.875em] text-gray-500">
+                                <span className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>
                                     {formatDate(edu.graduation_date)}
                                 </span>
                             </div>
@@ -123,7 +123,7 @@ const MinimalTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpac
                         Skills
                     </h2>
 
-                    <div className="text-gray-700">
+                    <div className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         {data.skills.join(" • ")}
                     </div>
                 </section>

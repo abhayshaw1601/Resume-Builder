@@ -29,7 +29,7 @@ export const getAccentSolidColor = (value) => {
     return value
 }
 
-const ThemeSettingsForm = ({ accentColor, fontSize, headingSize, sectionSpacing, setResumeData }) => {
+const ThemeSettingsForm = ({ isDarkMode, accentColor, fontSize, headingSize, sectionSpacing, setResumeData }) => {
     const [customColor, setCustomColor] = useState(
         accentColor?.startsWith('linear-gradient') ? '#A6FF5D' : (accentColor || '#A6FF5D')
     )
@@ -47,12 +47,26 @@ const ThemeSettingsForm = ({ accentColor, fontSize, headingSize, sectionSpacing,
         setResumeData(prev => ({ ...prev, [name]: parseInt(value) }))
     }
 
+    const toggleTheme = () => {
+        setResumeData(prev => ({ ...prev, is_dark_mode: !prev.is_dark_mode }))
+    }
+
     const isActive = (value) => accentColor === value
 
     return (
         <div className="flex flex-col gap-8">
-            {/* Layout Controls */}
+            {/* Theme & Layout Controls */}
             <div className="grid grid-cols-1 gap-6 bg-white/5 border border-white/10 rounded-2xl p-4">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <label className="text-sm tracking-wide text-gray-200 font-medium">Dark Mode Appearance</label>
+                    <button 
+                        onClick={toggleTheme}
+                        className={`relative w-12 h-6 rounded-full transition-colors duration-300 ease-in-out ${isDarkMode ? 'bg-[#A6FF5D]' : 'bg-gray-600'}`}
+                    >
+                        <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${isDarkMode ? 'translate-x-6' : 'translate-x-0'}`}></div>
+                    </button>
+                </div>
+
                 <div className="space-y-3">
                     <div className="flex justify-between items-center">
                         <label className="text-xs uppercase tracking-widest text-gray-400 font-bold">Font Size</label>

@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe, Briefcase, GraduationCap } from "lucide-react";
 
-const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const TimelineTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -11,13 +11,13 @@ const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
     };
 
     return (
-        <div className="max-w-4xl mx-auto bg-white text-gray-800 p-8" style={{ fontSize: fontSize || 15 }}>
+        <div className={`max-w-4xl mx-auto ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} p-8`} style={{ fontSize: fontSize || 15 }}>
             {/* Header */}
-            <header className="text-center mb-8 pb-6 border-b-2 border-gray-100">
-                <h1 className="font-bold text-gray-900 mb-1" style={{ fontSize: headingSize || 24 }}>
+            <header className={`text-center mb-8 pb-6 border-b-2 ${isDarkMode ? 'border-white/10' : 'border-gray-100'}`}>
+                <h1 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} mb-1`} style={{ fontSize: headingSize || 24 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
-                <div className="flex flex-wrap justify-center gap-4 text-[0.75em] text-gray-500 mt-3">
+                <div className={`flex flex-wrap justify-center gap-4 text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 mt-3`}>
                     {data.personal_info?.email && (
                         <span className="flex items-center gap-1"><Mail size={12} style={{ color: accentColor }} />{data.personal_info.email}</span>
                     )}
@@ -35,7 +35,7 @@ const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                     )}
                 </div>
                 {data.professional_summary && (
-                    <p className="text-[0.875em] text-gray-600 leading-relaxed mt-4 max-w-2xl mx-auto">{data.professional_summary}</p>
+                    <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed mt-4 max-w-2xl mx-auto`}>{data.professional_summary}</p>
                 )}
             </header>
 
@@ -58,10 +58,10 @@ const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                                         <Briefcase size={12} className="text-white" />
                                     </div>
                                     
-                                    <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                                    <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-gray-50'} rounded-xl p-4 border ${isDarkMode ? 'border-white/10' : 'border-gray-100'}`}>
                                         <div className="flex justify-between items-baseline">
-                                            <h3 className="font-bold text-gray-900">{exp.position}</h3>
-                                            <span className="text-[0.6875em] px-2 py-0.5 rounded-full text-gray-500 bg-white border border-gray-200 whitespace-nowrap ml-3">
+                                            <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
+                                            <span className={`text-[0.6875em] px-2 py-0.5 rounded-full ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} border ${isDarkMode ? 'border-white/10' : 'border-gray-200'} whitespace-nowrap ml-3`}>
                                                 {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                             </span>
                                         </div>
@@ -71,7 +71,7 @@ const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                                                 : exp.company}
                                         </p>
                                         {exp.description && (
-                                            <div className="mt-2 text-[0.875em] text-gray-600 leading-relaxed whitespace-pre-line">{exp.description}</div>
+                                            <div className={`mt-2 text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed whitespace-pre-line`}>{exp.description}</div>
                                         )}
                                     </div>
                                 </div>
@@ -89,13 +89,13 @@ const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                     </h2>
                     <div className="grid grid-cols-2 gap-3">
                         {data.project.map((p, i) => (
-                            <div key={i} className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                            <div key={i} className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-gray-50'} rounded-xl p-4 border ${isDarkMode ? 'border-white/10' : 'border-gray-100'}`}>
                                 <div className="flex items-center gap-2">
-                                    <h3 className="font-bold text-gray-900 text-[0.875em]">{p.name}</h3>
+                                    <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} text-[0.875em]`}>{p.name}</h3>
                                     {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                 </div>
                                 {p.type && <p className="text-[0.6875em] text-gray-400">{p.type}</p>}
-                                {p.description && <p className="text-[0.75em] text-gray-600 mt-1 line-clamp-2">{p.description}</p>}
+                                {p.description && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mt-1 line-clamp-2`}>{p.description}</p>}
                             </div>
                         ))}
                     </div>
@@ -118,7 +118,7 @@ const TimelineTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                                         <GraduationCap size={12} className="text-white" />
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-gray-900">{edu.degree} {edu.field && `in ${edu.field}`}</h3>
+                                        <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{edu.degree} {edu.field && `in ${edu.field}`}</h3>
                                         <p className="text-[0.875em]" style={{ color: accentColor }}>{edu.institution}</p>
                                         <p className="text-[0.75em] text-gray-400">{formatDate(edu.graduation_date)}</p>
                                         {edu.gpa && <p className="text-[0.75em] text-gray-400">GPA: {edu.gpa}</p>}

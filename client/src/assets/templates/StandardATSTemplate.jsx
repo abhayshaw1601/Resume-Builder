@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -20,13 +20,13 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
     );
 
     return (
-        <div className="max-w-4xl mx-auto bg-white text-gray-800 p-8" style={{ fontSize: fontSize || 15 }}>
+        <div className={`max-w-4xl mx-auto ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} p-8`} style={{ fontSize: fontSize || 15 }}>
             {/* Header */}
             <header className="text-center mb-6 pb-5" style={{ borderBottom: `3px solid ${accentColor}` }}>
-                <h1 className="font-bold tracking-wide text-gray-900 mb-1" style={{ fontSize: headingSize || 24 }}>
+                <h1 className={`font-bold tracking-wide ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} mb-1`} style={{ fontSize: headingSize || 24 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
-                <div className="flex flex-wrap justify-center gap-x-5 gap-y-1 text-[0.75em] text-gray-600 mt-3">
+                <div className={`flex flex-wrap justify-center gap-x-5 gap-y-1 text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mt-3`}>
                     {data.personal_info?.email && (
                         <span className="flex items-center gap-1"><Mail size={12} /> {data.personal_info.email}</span>
                     )}
@@ -49,7 +49,7 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
             {data.professional_summary && (
                 <section style={{ marginBottom: sectionSpacing || 20 }}>
                     <SectionTitle>Professional Summary</SectionTitle>
-                    <p className="text-gray-700 leading-relaxed">{data.professional_summary}</p>
+                    <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} leading-relaxed`}>{data.professional_summary}</p>
                 </section>
             )}
 
@@ -61,8 +61,8 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                         {data.experience.map((exp, i) => (
                             <div key={i}>
                                 <div className="flex justify-between items-baseline">
-                                    <h3 className="font-bold text-gray-900">{exp.position}</h3>
-                                    <span className="text-[0.75em] text-gray-500 whitespace-nowrap ml-4">
+                                    <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
+                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4`}>
                                         {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
@@ -72,7 +72,7 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                                         : exp.company}
                                 </p>
                                 {exp.description && (
-                                    <ul className="mt-1.5 space-y-0.5 text-gray-700 text-[0.875em]">
+                                    <ul className={`mt-1.5 space-y-0.5 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} text-[0.875em]`}>
                                         {exp.description.split("\n").filter(Boolean).map((line, j) => (
                                             <li key={j} className="flex gap-2">
                                                 <span style={{ color: accentColor }} className="mt-0.5 shrink-0">•</span>
@@ -95,13 +95,13 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                         {data.project.map((p, i) => (
                             <div key={i}>
                                 <div className="flex items-center gap-2">
-                                    <h3 className="font-bold text-gray-900">{p.name}</h3>
+                                    <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{p.name}</h3>
                                     {p.link && (
                                         <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.75em] hover:underline" style={{ color: accentColor }}>↗ Link</a>
                                     )}
                                 </div>
-                                {p.type && <p className="text-[0.75em] text-gray-500">{p.type}</p>}
-                                {p.description && <p className="text-[0.875em] text-gray-700 mt-0.5">{p.description}</p>}
+                                {p.type && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{p.type}</p>}
+                                {p.description && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mt-0.5`}>{p.description}</p>}
                             </div>
                         ))}
                     </div>
@@ -116,11 +116,11 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                         {data.education.map((edu, i) => (
                             <div key={i} className="flex justify-between items-baseline">
                                 <div>
-                                    <h3 className="font-bold text-gray-900">{edu.degree} {edu.field && `in ${edu.field}`}</h3>
-                                    <p className="text-[0.875em] text-gray-700">{edu.institution}</p>
-                                    {edu.gpa && <p className="text-[0.75em] text-gray-500">GPA: {edu.gpa}</p>}
+                                    <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{edu.degree} {edu.field && `in ${edu.field}`}</h3>
+                                    <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{edu.institution}</p>
+                                    {edu.gpa && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
                                 </div>
-                                <span className="text-[0.75em] text-gray-500 whitespace-nowrap ml-4">{formatDate(edu.graduation_date)}</span>
+                                <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4`}>{formatDate(edu.graduation_date)}</span>
                             </div>
                         ))}
                     </div>
@@ -131,7 +131,7 @@ const StandardATSTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
             {data.skills?.length > 0 && (
                 <section style={{ marginBottom: sectionSpacing || 20 }}>
                     <SectionTitle>Core Skills</SectionTitle>
-                    <div className="flex flex-wrap gap-x-1 gap-y-0.5 text-[0.875em] text-gray-700">
+                    <div className={`flex flex-wrap gap-x-1 gap-y-0.5 text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         {data.skills.map((skill, i) => (
                             <span key={i}>
                                 {skill}{i < data.skills.length - 1 ? <span className="mx-1" style={{ color: accentColor }}>|</span> : ""}

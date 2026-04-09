@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const GitHubDarkTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -58,8 +58,8 @@ const GitHubDarkTemplate = ({ data, accentColor, accentBg, fontSize, headingSize
                                 <div key={i}>
                                     <p className="font-semibold text-white text-[0.75em]">{edu.degree}</p>
                                     <p className="text-[0.75em] text-gray-400">{edu.institution}</p>
-                                    <p className="text-[0.625em] text-gray-500">{formatDate(edu.graduation_date)}</p>
-                                    {edu.gpa && <p className="text-[0.625em] text-gray-500">GPA: {edu.gpa}</p>}
+                                    <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{formatDate(edu.graduation_date)}</p>
+                                    {edu.gpa && <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
                                 </div>
                             ))}
                         </div>
@@ -101,7 +101,7 @@ const GitHubDarkTemplate = ({ data, accentColor, accentBg, fontSize, headingSize
                                 <div key={i} className="pl-4 border-l-2" style={{ borderColor: `${accent}50` }}>
                                     <div className="flex justify-between items-baseline">
                                         <h3 className="font-semibold text-white">{exp.position}</h3>
-                                        <span className="text-[0.6875em] text-gray-500 whitespace-nowrap ml-3 font-mono">
+                                        <span className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-3 font-mono`}>
                                             {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                         </span>
                                     </div>
@@ -142,7 +142,7 @@ const GitHubDarkTemplate = ({ data, accentColor, accentBg, fontSize, headingSize
                                             <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline ml-auto" style={{ color: accent }}>↗ Link</a>
                                         )}
                                     </div>
-                                    {p.type && <p className="text-[0.625em] text-gray-500 mt-0.5 ml-6">{p.type}</p>}
+                                    {p.type && <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 mt-0.5 ml-6`}>{p.type}</p>}
                                     {p.description && <p className="text-[0.75em] text-gray-400 mt-1 ml-6">{p.description}</p>}
                                 </div>
                             ))}

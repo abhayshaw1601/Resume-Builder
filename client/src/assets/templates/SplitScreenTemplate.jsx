@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -16,7 +16,7 @@ const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
             <aside className="w-[36%] text-white p-7 flex flex-col gap-6 shrink-0" style={{ background: accentBg || accentColor }}>
                 {/* Photo */}
                 {data.personal_info?.photo && (
-                    <div className="w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white/20 shadow-lg bg-white/10">
+                    <div className={`w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white/20 shadow-lg ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10`}>
                         <img src={data.personal_info.photo} alt="Profile" className="w-full h-full object-cover"
                             style={{
                                 transform: `scale(${data.personal_info.photo_settings?.scale || 1}) translate(${data.personal_info.photo_settings?.offsetX || 0}px, ${data.personal_info.photo_settings?.offsetY || 0}px)`,
@@ -85,7 +85,7 @@ const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                         <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Skills</h2>
                         <div className="flex flex-wrap gap-1.5">
                             {data.skills.map((skill, i) => (
-                                <span key={i} className="bg-white/15 border border-white/10 px-2 py-0.5 rounded text-[0.6875em]">{skill}</span>
+                                <span key={i} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/15 border border-white/10 px-2 py-0.5 rounded text-[0.6875em]`}>{skill}</span>
                             ))}
                         </div>
                     </div>
@@ -93,7 +93,7 @@ const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
             </aside>
 
             {/* Right Content */}
-            <main className="flex-1 bg-white text-gray-800 p-8 flex flex-col gap-5">
+            <main className={`flex-1 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} p-8 flex flex-col gap-5`}>
                 {/* Experience */}
                 {data.experience?.length > 0 && (
                     <section style={{ marginBottom: sectionSpacing || 24 }}>
@@ -104,7 +104,7 @@ const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                             {data.experience.map((exp, i) => (
                                 <div key={i}>
                                     <div className="flex justify-between items-baseline">
-                                        <h3 className="font-bold text-gray-900">{exp.position}</h3>
+                                        <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
                                         <span className="text-[0.75em] text-gray-400 whitespace-nowrap ml-4">
                                             {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                         </span>
@@ -115,7 +115,7 @@ const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                                             : exp.company}
                                     </p>
                                     {exp.description && (
-                                        <ul className="mt-2 space-y-0.5 text-[0.875em] text-gray-700">
+                                        <ul className={`mt-2 space-y-0.5 text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                                             {exp.description.split("\n").filter(Boolean).map((line, j) => (
                                                 <li key={j} className="flex gap-2">
                                                     <span style={{ color: accentColor }} className="shrink-0">•</span>
@@ -140,11 +140,11 @@ const SplitScreenTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                             {data.project.map((p, i) => (
                                 <div key={i} className="pl-4 border-l-2" style={{ borderColor: `${accentColor}40` }}>
                                     <div className="flex items-center gap-2">
-                                        <h3 className="font-bold text-gray-900">{p.name}</h3>
+                                        <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{p.name}</h3>
                                         {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.75em] hover:underline" style={{ color: accentColor }}>↗ Link</a>}
                                     </div>
                                     {p.type && <p className="text-[0.6875em] text-gray-400">{p.type}</p>}
-                                    {p.description && <p className="text-[0.875em] text-gray-600 mt-1">{p.description}</p>}
+                                    {p.description && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mt-1`}>{p.description}</p>}
                                 </div>
                             ))}
                         </div>

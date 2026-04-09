@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeftIcon, DownloadIcon, SaveIcon, Loader2Icon, SparklesIcon, XIcon } from 'lucide-react';
+import { ArrowLeftIcon, DownloadIcon, SaveIcon, Loader2Icon, SparklesIcon, XIcon, FileDown } from 'lucide-react';
 import FormEditor from '../components/builder/FormEditor';
 import ResumePreview from '../components/builder/ResumePreview';
 import API from '../api/axios';
+import { exportToWord } from '../utils/wordExport';
 
 const ResumeBuilder = () => {
 
@@ -34,6 +35,7 @@ const ResumeBuilder = () => {
         portfolio: '',
       },
       public: false,
+      is_dark_mode: false,
       accent_color: '#A6FF5D',
       font_size: 16,
       section_spacing: 24,
@@ -46,6 +48,7 @@ const ResumeBuilder = () => {
     _id: dbResume._id,
     title: dbResume.title || '',
     template: dbResume.template || 'classic',
+    is_dark_mode: dbResume.is_dark_mode || false,
     accent_color: dbResume.accent_color || '#A6FF5D',
     font_size: dbResume.font_size || 16,
     section_spacing: dbResume.section_spacing || 24,
@@ -90,6 +93,7 @@ const ResumeBuilder = () => {
   const adaptToDB = (builderData) => ({
     title: builderData.title,
     template: builderData.template,
+    is_dark_mode: builderData.is_dark_mode,
     accent_color: builderData.accent_color,
     font_size: builderData.font_size,
     section_spacing: builderData.section_spacing,
@@ -258,13 +262,24 @@ const ResumeBuilder = () => {
             )}
             {analyzing ? 'Analyzing...' : 'AI Analyze'}
           </button>
-          <button 
-            onClick={handlePrint}
-            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors cursor-pointer"
-          >
-            <DownloadIcon size={16} />
-            Export PDF
-          </button>
+          <div className="hidden sm:flex items-center gap-2">
+            <button 
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+              title="Export PDF"
+            >
+              <DownloadIcon size={16} />
+              PDF
+            </button>
+            <button 
+              onClick={() => exportToWord(resumeData)}
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+              title="Export Word Document (ATS Friendly)"
+            >
+              <FileDown size={16} />
+              Word
+            </button>
+          </div>
           <button 
             onClick={handleSave}
             disabled={saving}

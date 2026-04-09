@@ -58,6 +58,7 @@ const FormEditor = ({ resumeData, setResumeData }) => {
 
       <AccordionItem title="Theme & Colors" id="theme" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
         <ThemeSettingsForm 
+          isDarkMode={resumeData.is_dark_mode}
           accentColor={resumeData.accent_color} 
           fontSize={resumeData.font_size}
           headingSize={resumeData.heading_size}

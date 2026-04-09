@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const InfographicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -14,10 +14,10 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
     const getSkillPercent = (index) => 75 + ((index * 7) % 25);
 
     return (
-        <div className="max-w-4xl mx-auto bg-gradient-to-br from-gray-50 to-white text-gray-800 p-8" style={{ fontSize: fontSize || 14 }}>
+        <div className={`max-w-4xl mx-auto bg-gradient-to-br from-gray-50 to-white ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} p-8`} style={{ fontSize: fontSize || 14 }}>
             {/* Header */}
-            <header className="text-center mb-6 pb-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h1 className="font-bold text-gray-900 mb-1" style={{ fontSize: headingSize || 24 }}>
+            <header className={`text-center mb-6 pb-6 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} rounded-2xl shadow-sm border ${isDarkMode ? 'border-white/10' : 'border-gray-100'} p-6`}>
+                <h1 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} mb-1`} style={{ fontSize: headingSize || 24 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
                 {data.experience?.[0]?.position && (
@@ -54,13 +54,13 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                 </div>
 
                 {data.professional_summary && (
-                    <p className="text-[0.875em] text-gray-600 leading-relaxed mt-4 max-w-2xl mx-auto">{data.professional_summary}</p>
+                    <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed mt-4 max-w-2xl mx-auto`}>{data.professional_summary}</p>
                 )}
             </header>
 
             {/* Skills with Progress Bars */}
             {data.skills?.length > 0 && (
-                <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4" style={{ marginBottom: sectionSpacing || 16 }}>
+                <section className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} rounded-2xl shadow-sm border ${isDarkMode ? 'border-white/10' : 'border-gray-100'} p-6 mb-4`} style={{ marginBottom: sectionSpacing || 16 }}>
                     <h2 className="font-bold uppercase tracking-widest mb-4 text-center" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.55 : 14 }}>
                         Skill Proficiency
                     </h2>
@@ -70,10 +70,10 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                             return (
                                 <div key={i}>
                                     <div className="flex justify-between text-[0.75em] mb-0.5">
-                                        <span className="text-gray-700 font-medium">{skill}</span>
+                                        <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} font-medium`}>{skill}</span>
                                         <span className="text-gray-400">{pct}%</span>
                                     </div>
-                                    <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                    <div className={`w-full h-1.5 ${isDarkMode ? 'bg-[#222]' : 'bg-gray-100'} rounded-full overflow-hidden`}>
                                         <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: accentColor, opacity: 0.8 }}></div>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
 
             {/* Experience */}
             {data.experience?.length > 0 && (
-                <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4" style={{ marginBottom: sectionSpacing || 16 }}>
+                <section className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} rounded-2xl shadow-sm border ${isDarkMode ? 'border-white/10' : 'border-gray-100'} p-6 mb-4`} style={{ marginBottom: sectionSpacing || 16 }}>
                     <h2 className="font-bold uppercase tracking-widest mb-4 text-center" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.55 : 14 }}>
                         Professional Experience
                     </h2>
@@ -93,7 +93,7 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                         {data.experience.map((exp, i) => (
                             <div key={i} className="border-l-4 pl-4 pb-3 last:pb-0" style={{ borderColor: accentColor }}>
                                 <div className="flex justify-between items-baseline">
-                                    <h3 className="font-bold text-gray-900">{exp.position}</h3>
+                                    <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
                                     <span className="text-[0.6875em] text-gray-400 whitespace-nowrap ml-3">
                                         {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
@@ -104,7 +104,7 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                                         : exp.company}
                                 </p>
                                 {exp.description && (
-                                    <ul className="mt-1.5 space-y-0.5 text-[0.875em] text-gray-600">
+                                    <ul className={`mt-1.5 space-y-0.5 text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                                         {exp.description.split("\n").filter(Boolean).map((line, j) => (
                                             <li key={j} className="flex gap-2">
                                                 <span style={{ color: accentColor }}>▸</span>
@@ -123,14 +123,14 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
             <div className="grid grid-cols-2 gap-4">
                 {/* Education */}
                 {data.education?.length > 0 && (
-                    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <section className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} rounded-2xl shadow-sm border ${isDarkMode ? 'border-white/10' : 'border-gray-100'} p-5`}>
                         <h2 className="font-bold uppercase tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                             Education
                         </h2>
                         <div className="space-y-3">
                             {data.education.map((edu, i) => (
                                 <div key={i}>
-                                    <p className="font-semibold text-[0.875em] text-gray-900">{edu.degree}</p>
+                                    <p className={`font-semibold text-[0.875em] ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{edu.degree}</p>
                                     <p className="text-[0.75em]" style={{ color: accentColor }}>{edu.institution}</p>
                                     <p className="text-[0.6875em] text-gray-400">{formatDate(edu.graduation_date)}</p>
                                     {edu.gpa && <p className="text-[0.6875em] text-gray-400">GPA: {edu.gpa}</p>}
@@ -142,7 +142,7 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
 
                 {/* Projects */}
                 {data.project?.length > 0 && (
-                    <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+                    <section className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} rounded-2xl shadow-sm border ${isDarkMode ? 'border-white/10' : 'border-gray-100'} p-5`}>
                         <h2 className="font-bold uppercase tracking-widest mb-3" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>
                             Projects
                         </h2>
@@ -150,11 +150,11 @@ const InfographicTemplate = ({ data, accentColor, accentBg, fontSize, headingSiz
                             {data.project.map((p, i) => (
                                 <div key={i}>
                                     <div className="flex items-center gap-1.5">
-                                        <p className="font-semibold text-[0.875em] text-gray-900">{p.name}</p>
+                                        <p className={`font-semibold text-[0.875em] ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{p.name}</p>
                                         {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                     </div>
                                     {p.type && <p className="text-[0.6875em] text-gray-400">{p.type}</p>}
-                                    {p.description && <p className="text-[0.75em] text-gray-600 mt-0.5 line-clamp-2">{p.description}</p>}
+                                    {p.description && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mt-0.5 line-clamp-2`}>{p.description}</p>}
                                 </div>
                             ))}
                         </div>

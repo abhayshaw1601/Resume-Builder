@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin } from "lucide-react";
 
-const MinimalImageTemplate = ({ data, accentColor, fontSize, headingSize, sectionSpacing }) => {
+const MinimalImageTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -16,7 +16,7 @@ const MinimalImageTemplate = ({ data, accentColor, fontSize, headingSize, sectio
     };
 
     return (
-        <div className="max-w-5xl mx-auto bg-white text-zinc-800" style={{ fontSize: fontSize || 16 }}>
+        <div className={`max-w-5xl mx-auto ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} text-zinc-800`} style={{ fontSize: fontSize || 16 }}>
             <div className="grid grid-cols-3">
 
                 <div className="col-span-1  py-10">

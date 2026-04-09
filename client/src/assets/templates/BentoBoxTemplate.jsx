@@ -1,6 +1,6 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
+const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
         try {
@@ -20,11 +20,11 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
     );
 
     return (
-        <div className="w-full bg-gray-50 p-6" style={{ fontSize: fontSize || 14 }}>
+        <div className={`w-full ${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-gray-50'} p-6`} style={{ fontSize: fontSize || 14 }}>
             <div className="grid grid-cols-3 gap-3 auto-rows-auto">
                 {/* Header Card - Span 2 */}
                 <Card span={2}>
-                    <h1 className="font-bold text-gray-900 mb-1" style={{ fontSize: headingSize || 24 }}>
+                    <h1 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} mb-1`} style={{ fontSize: headingSize || 24 }}>
                         {data.personal_info?.full_name || "Your Name"}
                     </h1>
                     {data.experience?.[0]?.position && (
@@ -33,7 +33,7 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                         </p>
                     )}
                     {data.professional_summary && (
-                        <p className="text-[0.875em] text-gray-600 leading-relaxed">{data.professional_summary}</p>
+                        <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed`}>{data.professional_summary}</p>
                     )}
                 </Card>
 
@@ -85,7 +85,7 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                         <div className="space-y-3">
                             {data.education.map((edu, i) => (
                                 <div key={i}>
-                                    <p className="font-semibold text-gray-900 text-[0.875em]">{edu.degree}</p>
+                                    <p className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} text-[0.875em]`}>{edu.degree}</p>
                                     <p className="text-[0.75em]" style={{ color: accentColor }}>{edu.institution}</p>
                                     <p className="text-[0.6875em] text-gray-400">{formatDate(edu.graduation_date)}</p>
                                     {edu.gpa && <p className="text-[0.6875em] text-gray-400">GPA: {edu.gpa}</p>}
@@ -102,7 +102,7 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                         <div className="grid grid-cols-2 gap-4">
                             {data.experience.map((exp, i) => (
                                 <div key={i} className="border-l-3 pl-3" style={{ borderColor: accentColor }}>
-                                    <h3 className="font-bold text-gray-900 text-[0.875em]">{exp.position}</h3>
+                                    <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} text-[0.875em]`}>{exp.position}</h3>
                                     <p className="text-[0.75em] font-medium" style={{ color: accentColor }}>
                                         {exp.link
                                             ? <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:underline">{exp.company} ↗</a>
@@ -112,7 +112,7 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                                         {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </p>
                                     {exp.description && (
-                                        <p className="text-[0.75em] text-gray-600 line-clamp-3 whitespace-pre-line">{exp.description}</p>
+                                        <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} line-clamp-3 whitespace-pre-line`}>{exp.description}</p>
                                     )}
                                 </div>
                             ))}
@@ -126,13 +126,13 @@ const BentoBoxTemplate = ({ data, accentColor, accentBg, fontSize, headingSize, 
                         <h2 className="font-bold uppercase tracking-widest mb-4" style={{ color: accentColor, fontSize: headingSize ? headingSize * 0.5 : 12 }}>Projects</h2>
                         <div className="grid grid-cols-3 gap-3">
                             {data.project.map((p, i) => (
-                                <div key={i} className="bg-gray-50 rounded-lg p-3 border border-gray-100">
+                                <div key={i} className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-gray-50'} rounded-lg p-3 border ${isDarkMode ? 'border-white/10' : 'border-gray-100'}`}>
                                     <div className="flex items-center gap-1.5">
-                                        <h3 className="font-semibold text-gray-900 text-[0.875em]">{p.name}</h3>
+                                        <h3 className={`font-semibold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} text-[0.875em]`}>{p.name}</h3>
                                         {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                     </div>
                                     {p.type && <p className="text-[0.625em] text-gray-400 mb-1">{p.type}</p>}
-                                    {p.description && <p className="text-[0.75em] text-gray-600 line-clamp-2">{p.description}</p>}
+                                    {p.description && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} line-clamp-2`}>{p.description}</p>}
                                 </div>
                             ))}
                         </div>
