@@ -1,33 +1,87 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
-import { dummyResumeData } from '../assets/assets'
+import API from '../api/axios'
 
 const Dashboard = () => {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [allresume, setallresume] = useState([])
+  const [loading, setLoading] = useState(true)
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [newResumeName, setNewResumeName] = useState('')
   const [showUploadModal, setShowUploadModal] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
   const [uploadResumeName, setUploadResumeName] = useState('')
+  const [deleteId, setDeleteId] = useState(null)
+  const [isExtracting, setIsExtracting] = useState(false)
 
-  // Load the dummy data when component mounts
-  useEffect(() => {
+  // Fetch real resumes from API
+  const fetchResumes = async () => {
     try {
-      // In a real app, this would be an API fetch call.
-      setallresume(dummyResumeData)
+      setLoading(true)
+      const { data } = await API.get('/resumes')
+      setallresume(data)
     } catch (error) {
-      console.log(error)
+      console.error('Failed to fetch resumes:', error.message)
+    } finally {
+      setLoading(false)
     }
+  }
+
+  useEffect(() => {
+    fetchResumes()
   }, [])
 
-  const handleCreateConfirm = () => {
+  const handleCreateConfirm = async () => {
     if (!newResumeName.trim()) return;
-    // Mock creating logic: you'd navigate with the new ID or title
-    setShowCreateModal(false)
-    navigate('/app/builder/new')
+    try {
+      const { data } = await API.post('/resumes', { title: newResumeName.trim() })
+      setShowCreateModal(false)
+      setNewResumeName('')
+      navigate(`/app/builder/${data._id}`)
+    } catch (error) {
+      console.error('Create resume error:', error.message)
+    }
+  }
+
+  const handleUploadConfirm = async () => {
+    if (!selectedFile || !uploadResumeName.trim()) return;
+
+    try {
+      setIsExtracting(true)
+      const formData = new FormData();
+      formData.append('resume', selectedFile);
+      formData.append('title', uploadResumeName.trim());
+
+      const { data } = await API.post('/resumes/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+
+      setShowUploadModal(false);
+      setSelectedFile(null);
+      setUploadResumeName('');
+      
+      // Redirect to builder to check errors as requested
+      navigate(`/app/builder/${data._id}`);
+    } catch (error) {
+      console.error('Upload error:', error.response?.data?.message || error.message);
+      alert(error.response?.data?.message || 'Failed to extract resume data. Please try again.');
+    } finally {
+      setIsExtracting(false);
+    }
+  }
+
+  const handleDelete = async (id) => {
+    try {
+      await API.delete(`/resumes/${id}`)
+      setallresume(prev => prev.filter(r => r._id !== id))
+      setDeleteId(null)
+    } catch (error) {
+      console.error('Delete resume error:', error.message)
+    }
   }
 
   return (
@@ -69,14 +123,43 @@ const Dashboard = () => {
           <p className="text-sm text-gray-500 mt-2">Start from scratch or use an exact template.</p>
         </button>
 
+        {/* Loading Skeletons */}
+        {loading && Array.from({ length: 3 }).map((_, i) => (
+          <div key={`skeleton-${i}`} className="bg-white/[0.03] border border-white/[0.06] rounded-2xl h-[320px] flex flex-col overflow-hidden animate-pulse">
+            <div className="flex-1 bg-white/5 border-b border-white/[0.06]" />
+            <div className="p-5 flex flex-col gap-2">
+              <div className="w-2/3 h-4 bg-white/10 rounded" />
+              <div className="w-1/3 h-3 bg-white/5 rounded" />
+            </div>
+          </div>
+        ))}
+
+        {/* Empty State */}
+        {!loading && allresume.length === 0 && (
+          <div className="col-span-full flex flex-col items-center justify-center py-16 text-center">
+            <div className="w-20 h-20 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-gray-500" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">No resumes yet</h3>
+            <p className="text-sm text-gray-500 max-w-sm">Click "Create New" to build your first resume and land your dream job.</p>
+          </div>
+        )}
+
         {/* Existing Resumes */}
-        {allresume.map((resume, index) => (
-          <div key={resume._id} className="bg-white/[0.03] border border-white/[0.06] hover:border-white/20 rounded-2xl h-[320px] flex flex-col overflow-hidden transition-all duration-300 group relative">
+        {!loading && allresume.map((resume) => (
+          <div 
+            key={resume._id} 
+            onClick={() => navigate(`/app/preview/${resume._id}`)}
+            className="bg-white/[0.03] border border-white/[0.06] hover:border-[#A6FF5D]/30 rounded-2xl h-[400px] flex flex-col overflow-hidden transition-all duration-300 group relative cursor-pointer"
+          >
 
             {/* Thumbnail placeholder */}
             <div className="flex-1 bg-white/5 border-b border-white/[0.06] p-4 relative overflow-hidden group-hover:opacity-80 transition-opacity">
               <div className="w-full h-full bg-black/40 rounded-lg shadow-inner flex flex-col p-4 gap-2 border border-white/5 relative">
-                <div className="w-1/2 h-3 bg-[#A6FF5D]/80 rounded mb-2"></div>
+                <div className="w-1/2 h-3 rounded mb-2" style={{ backgroundColor: resume.accent_color || '#A6FF5D', opacity: 0.8 }}></div>
                 <div className="w-full h-1 bg-gray-700 mt-2 rounded"></div>
                 <div className="w-4/5 h-1 bg-gray-700 rounded"></div>
                 <div className="w-3/4 h-1 bg-gray-700 rounded"></div>
@@ -92,10 +175,24 @@ const Dashboard = () => {
 
               {/* Hover Overlay Actions */}
               <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                <button className="w-12 h-12 rounded-full bg-[#A6FF5D] shadow-[0_0_20px_rgba(166,255,93,0.3)] text-black flex items-center justify-center hover:scale-110 transition-transform cursor-pointer">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/app/builder/${resume._id}`);
+                  }}
+                  className="w-12 h-12 rounded-full bg-[#A6FF5D] shadow-[0_0_20px_rgba(166,255,93,0.3)] text-black flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
+                  title="Edit resume"
+                >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                 </button>
-                <button className="w-12 h-12 rounded-full bg-red-500/20 hover:bg-red-500/80 text-red-400 hover:text-white flex items-center justify-center hover:scale-110 transition-all cursor-pointer">
+                <button 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteId(resume._id);
+                  }}
+                  className="w-12 h-12 rounded-full bg-red-500/20 hover:bg-red-500/80 text-red-400 hover:text-white flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
+                  title="Delete resume"
+                >
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                 </button>
               </div>
@@ -105,9 +202,9 @@ const Dashboard = () => {
             <div className="p-5 flex flex-col justify-end">
               <div className="flex justify-between items-start mb-2">
                 <h3 className="font-semibold text-white truncate pr-2 text-sm" title={resume.title}>{resume.title}</h3>
-                <div className="flex items-center gap-1 bg-[#A6FF5D]/10 text-[#A6FF5D] px-2 py-0.5 rounded text-xs font-semibold shrink-0">
-                  <span>{85 + index * 4}%</span> ATS
-                </div>
+                <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-white/10 px-2 py-0.5 rounded-full shrink-0">
+                  {resume.template || 'classic'}
+                </span>
               </div>
               <p className="text-xs text-gray-500">Updated {new Date(resume.updatedAt).toLocaleDateString()}</p>
             </div>
@@ -117,10 +214,49 @@ const Dashboard = () => {
 
       </div>
 
+      {/* Delete Confirmation Modal */}
+      {deleteId && (
+        <div 
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setDeleteId(null)}
+        >
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            className="bg-gray-900 border border-white/10 rounded-2xl w-full max-w-sm p-6 shadow-2xl flex flex-col gap-5"
+          >
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-red-400" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-lg font-bold text-white">Delete Resume?</h2>
+                <p className="text-sm text-gray-400">This action cannot be undone.</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={() => setDeleteId(null)}
+                className="px-5 py-2.5 text-sm font-medium text-gray-400 hover:text-white transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => handleDelete(deleteId)}
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Create Resume Modal */}
       {showCreateModal && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
           onClick={() => setShowCreateModal(false)}
         >
           <div 
@@ -176,7 +312,7 @@ const Dashboard = () => {
       {/* Upload Resume Modal */}
       {showUploadModal && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
+          className="fixed inset-0 z-100 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in"
           onClick={() => {
             setShowUploadModal(false)
             setSelectedFile(null)
@@ -201,7 +337,6 @@ const Dashboard = () => {
                     <button className="bg-white/10 hover:bg-white/20 text-white px-4 py-1.5 rounded text-xs font-medium transition-colors pointer-events-none">
                         Browse Files
                     </button>
-                    {/* Hidden interactive file input mapped over the entire dropzone block */}
                     <input 
                         type="file" 
                         accept=".pdf,.doc,.docx"
@@ -257,7 +392,6 @@ const Dashboard = () => {
                                 <p className="text-xs text-gray-500">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
                             </div>
                         </div>
-                        {/* Edit / Remove Button */}
                         <button 
                             onClick={() => setSelectedFile(null)}
                             className="text-gray-400 hover:text-[#A6FF5D] p-2 shrink-0 transition-colors cursor-pointer"
@@ -281,25 +415,33 @@ const Dashboard = () => {
                 Cancel
               </button>
               <button
-                onClick={() => {
-                    if(selectedFile && uploadResumeName.trim()) {
-                        setShowUploadModal(false)
-                        setSelectedFile(null)
-                        setUploadResumeName('')
-                        // Mock redirecting to builder page with an ID after upload
-                        navigate('/app/builder/uploaded_resume_123')
-                    }
-                }}
+                onClick={handleUploadConfirm}
                 className="bg-[#A6FF5D] hover:bg-[#A6FF5D]/90 text-black px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer disabled:opacity-50"
-                disabled={!selectedFile || !uploadResumeName.trim()}
+                disabled={!selectedFile || !uploadResumeName.trim() || isExtracting}
               >
-                Upload
+                {isExtracting ? 'Extracting...' : 'Upload & Extract'}
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* Create Resume Modal */}
+      {/* ... (existing code continues) ... */}
+      
+      {/* Extraction Loading Overlay */}
+      {isExtracting && (
+          <div className="fixed inset-0 z-200 flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl">
+              <div className="relative mb-8">
+                  <div className="w-24 h-24 rounded-full border-4 border-[#A6FF5D]/10 border-t-[#A6FF5D] animate-spin" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-[#A6FF5D] animate-pulse" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  </div>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-2">AI is Extracting...</h2>
+              <p className="text-gray-400 text-center max-w-xs">Building your professional resume from your file. This may take 5-10 seconds.</p>
+          </div>
+      )}
     </div>
   )
 }

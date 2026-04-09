@@ -57,7 +57,12 @@ const FormEditor = ({ resumeData, setResumeData }) => {
       </AccordionItem>
 
       <AccordionItem title="Theme & Colors" id="theme" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>
-        <ThemeSettingsForm accentColor={resumeData.accent_color} setResumeData={setResumeData} />
+        <ThemeSettingsForm 
+          accentColor={resumeData.accent_color} 
+          fontSize={resumeData.font_size}
+          sectionSpacing={resumeData.section_spacing}
+          setResumeData={setResumeData} 
+        />
       </AccordionItem>
 
       <AccordionItem title="Personal Information" id="personal" activeAccordion={activeAccordion} setActiveAccordion={setActiveAccordion}>

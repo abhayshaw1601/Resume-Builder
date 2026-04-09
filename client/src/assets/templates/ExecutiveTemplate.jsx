@@ -1,14 +1,23 @@
 import React from 'react';
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const ExecutiveTemplate = ({ data, accentColor, accentBg }) => {
+const ExecutiveTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        return dateStr;
+        if (!dateStr || dateStr === "Invalid Date") return "";
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short"
+            });
+        } catch (e) {
+            return dateStr;
+        }
     };
 
     return (
-        <div className="w-full min-h-full bg-white text-gray-800 leading-relaxed flex flex-row shadow-2xl">
+        <div className="w-full min-h-full bg-white text-gray-800 leading-relaxed flex flex-row shadow-2xl" style={{ fontSize: fontSize || 16 }}>
             {/* Left Sidebar */}
             <aside className="w-[30%] min-h-full p-6 text-white flex flex-col gap-8 shrink-0" style={{ background: accentBg || accentColor || '#1e293b' }}>
                 
@@ -91,7 +100,7 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg }) => {
                 </header>
 
                 {data.professional_summary && (
-                    <section className="mb-8 relative">
+                    <section className="mb-8 relative" style={{ marginBottom: sectionSpacing || 32 }}>
                         <div className="absolute -left-4 top-0 w-1.5 h-full rounded" style={{ backgroundColor: accentColor }}></div>
                         <p className="text-sm text-gray-600 leading-loose italic font-medium">
                             "{data.professional_summary}"
@@ -100,7 +109,7 @@ const ExecutiveTemplate = ({ data, accentColor, accentBg }) => {
                 )}
 
                 {data.experience && data.experience.length > 0 && (
-                    <section>
+                    <section style={{ marginBottom: sectionSpacing || 32 }}>
                         <h2 className="text-lg font-extrabold uppercase tracking-widest mb-6 pb-2 border-b-2 border-gray-200" style={{ color: accentColor }}>
                             Professional Experience
                         </h2>

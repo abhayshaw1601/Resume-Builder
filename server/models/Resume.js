@@ -56,6 +56,14 @@ const resumeSchema = new mongoose.Schema({
         type: String,
         default: '#A6FF5D',
     },
+    font_size: {
+        type: Number,
+        default: 16,
+    },
+    section_spacing: {
+        type: Number,
+        default: 24,
+    },
     public: {
         type: Boolean,
         default: false,

@@ -1,17 +1,22 @@
 import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
-const ModernTemplate = ({ data, accentColor, accentBg }) => {
+const ModernTemplate = ({ data, accentColor, accentBg, fontSize, sectionSpacing }) => {
 	const formatDate = (dateStr) => {
-		if (!dateStr) return "";
-		const [year, month] = dateStr.split("-");
-		return new Date(year, month - 1).toLocaleDateString("en-US", {
-			year: "numeric",
-			month: "short"
-		});
+		if (!dateStr || dateStr === "Invalid Date") return "";
+		try {
+			const date = new Date(dateStr);
+			if (isNaN(date.getTime())) return dateStr;
+			return date.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "short"
+			});
+		} catch (e) {
+			return dateStr;
+		}
 	};
 
 	return (
-		<div className="max-w-4xl mx-auto bg-white text-gray-800">
+		<div className="max-w-4xl mx-auto bg-white text-gray-800" style={{ fontSize: fontSize || 16 }}>
 			{/* Header */}
 		<header className="p-8 text-white" style={{ background: accentBg || accentColor }}>
 				<h1 className="text-4xl font-light mb-3">
@@ -55,7 +60,7 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 			<div className="p-8">
 				{/* Professional Summary */}
 				{data.professional_summary && (
-					<section className="mb-8">
+					<section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
 						<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
 							Professional Summary
 						</h2>
@@ -65,7 +70,7 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 
 				{/* Experience */}
 				{data.experience && data.experience.length > 0 && (
-					<section className="mb-8">
+					<section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
 						<h2 className="text-2xl font-light mb-6 pb-2 border-b border-gray-200">
 							Experience
 						</h2>
@@ -101,7 +106,7 @@ const ModernTemplate = ({ data, accentColor, accentBg }) => {
 
 				{/* Projects */}
 				{data.project && data.project.length > 0 && (
-					<section className="mb-8">
+					<section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
 						<h2 className="text-2xl font-light mb-4 pb-2 border-b border-gray-200">
 							Projects
 						</h2>

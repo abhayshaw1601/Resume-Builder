@@ -26,6 +26,16 @@ const ProjectForm = ({ projects, setResumeData }) => {
 
     return (
         <div className="flex flex-col gap-6">
+            <div className="bg-[#A6FF5D]/5 border border-[#A6FF5D]/10 rounded-xl p-3 flex items-start gap-3">
+                <div className="p-1 bg-[#A6FF5D]/20 rounded-md">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A6FF5D" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <div>
+                    <p className="text-[11px] font-bold text-[#A6FF5D] uppercase tracking-wider mb-0.5">Pro Tip</p>
+                    <p className="text-xs text-gray-400 leading-tight">Keep project descriptions to <span className="text-white italic">3-4 high-impact bullets</span> to ensure your resume stays on a single page.</p>
+                </div>
+            </div>
+
             {(projects || []).map((proj, index) => (
                 <div key={index} className="bg-white/[0.02] border border-white/5 rounded-xl p-4 relative group">
                     <button

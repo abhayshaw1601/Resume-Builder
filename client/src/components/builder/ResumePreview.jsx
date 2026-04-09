@@ -59,7 +59,13 @@ const ResumePreview = ({ resumeData }) => {
 
   // Dynamic Layout Switcher — passes both solid color (text/borders) and bg (gradients)
   const renderTemplate = () => {
-    const props = { data: adaptedData, accentColor, accentBg }
+    const props = { 
+        data: adaptedData, 
+        accentColor, 
+        accentBg, 
+        fontSize: resumeData.font_size || 16,
+        sectionSpacing: resumeData.section_spacing || 24
+    }
     switch(templateId) {
         case 'classic': return <ClassicTemplate {...props} />
         case 'modern': return <ModernTemplate {...props} />
@@ -75,12 +81,20 @@ const ResumePreview = ({ resumeData }) => {
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#A6FF5D]/5 blur-[120px] rounded-full pointer-events-none -z-10" />
       {/* A4 Paper Scaled Container */}
       <div 
-        className="bg-white text-gray-900 transform origin-top shadow-2xl flex flex-col shrink-0 transition-all duration-300 pointer-events-none self-start mt-4" 
+        className="bg-white text-gray-900 transform origin-top shadow-2xl flex flex-col shrink-0 transition-all duration-300 pointer-events-none self-start mt-4 relative" 
         style={{
             width: '210mm',
             minHeight: '297mm',
         }}
       >
+        {/* Page End Indicator */}
+        <div 
+            className="absolute left-0 right-0 border-b-2 border-dashed border-red-500/30 z-20 no-print pointer-events-none"
+            style={{ top: '297mm' }}
+        >
+            <span className="absolute right-4 bottom-1 text-[10px] font-bold text-red-500/50 uppercase tracking-widest">Page 1 Ends Here</span>
+        </div>
+
         {renderTemplate()}
       </div>
     </div>

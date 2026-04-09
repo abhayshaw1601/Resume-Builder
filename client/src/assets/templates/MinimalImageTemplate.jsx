@@ -1,17 +1,22 @@
 import { Mail, Phone, MapPin } from "lucide-react";
 
-const MinimalImageTemplate = ({ data, accentColor }) => {
+const MinimalImageTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        const [year, month] = dateStr.split("-");
-        return new Date(year, month - 1).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short",
-        });
+        if (!dateStr || dateStr === "Invalid Date") return "";
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+            });
+        } catch (e) {
+            return dateStr;
+        }
     };
 
     return (
-        <div className="max-w-5xl mx-auto bg-white text-zinc-800">
+        <div className="max-w-5xl mx-auto bg-white text-zinc-800" style={{ fontSize: fontSize || 16 }}>
             <div className="grid grid-cols-3">
 
                 <div className="col-span-1  py-10">
@@ -44,7 +49,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
 
                     {/* Contact */}
-                    <section className="mb-8">
+                    <section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
                         <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
                             CONTACT
                         </h2>
@@ -72,7 +77,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
                     {/* Education */}
                     {data.education && data.education.length > 0 && (
-                        <section className="mb-8">
+                        <section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
                             <h2 className="text-sm font-semibold tracking-widest text-zinc-600 mb-3">
                                 EDUCATION
                             </h2>
@@ -110,7 +115,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
                     {/* Summary */}
                     {data.professional_summary && (
-                        <section className="mb-8">
+                        <section className="mb-8" style={{ marginBottom: sectionSpacing || 32 }}>
                             <h2 className="text-sm font-semibold tracking-widest mb-3" style={{ color: accentColor }} >
                                 SUMMARY
                             </h2>
@@ -122,7 +127,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
                     {/* Experience */}
                     {data.experience && data.experience.length > 0 && (
-                        <section>
+                        <section style={{ marginBottom: sectionSpacing || 32 }}>
                             <h2 className="text-sm font-semibold tracking-widest mb-4" style={{ color: accentColor }} >
                                 EXPERIENCE
                             </h2>
@@ -156,7 +161,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
 
                     {/* Projects */}
                     {data.project && data.project.length > 0 && (
-                        <section>
+                        <section style={{ marginBottom: sectionSpacing || 32 }}>
                             <h2 className="text-sm uppercase tracking-widest font-semibold" style={{ color: accentColor }}>
                                 PROJECTS
                             </h2>

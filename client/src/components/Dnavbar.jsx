@@ -12,7 +12,7 @@ const Dnavbar = () => {
     }
 
     return (
-        <nav className="w-full bg-black/80 backdrop-blur-md border-b border-white/10 py-3 sticky top-0 z-50">
+        <nav className="w-full bg-black/80 backdrop-blur-md border-b border-white/10 py-3 sticky top-0 z-50 no-print">
             <div className="flex items-center justify-between px-6 md:px-12 w-full max-w-[1600px] mx-auto">
                 
                 {/* Logo */}

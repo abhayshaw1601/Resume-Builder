@@ -1,17 +1,25 @@
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const { GoogleGenAI } = require('@google/genai');
 const Resume = require('../models/Resume');
 const User = require('../models/User');
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // @desc    Create a new resume
 // @route   POST /api/resumes
 // @access  Private
 const createResume = async (req, res) => {
     try {
-        const resume = await Resume.create({
+        const resumeData = {
             userId: req.user._id,
             title: req.body.title || 'Untitled Resume',
-        });
+            ...req.body,
+        };
+        // Ensure userId is always the authenticated user
+        resumeData.userId = req.user._id;
 
+        const resume = await Resume.create(resumeData);
         res.status(201).json(resume);
     } catch (error) {
         console.error('Create resume error:', error.message);
@@ -125,4 +133,120 @@ const deleteResume = async (req, res) => {
     }
 };
 
-module.exports = { createResume, getResumes, getResumeById, updateResume, deleteResume };
+// @desc    Upload and extract resume data via AI
+// @route   POST /api/resumes/upload
+// @access  Private
+const uploadAndExtractResume = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        const filePath = req.file.path;
+        const mimeType = req.file.mimetype;
+        const resumeTitle = req.body.title || req.file.originalname.split('.')[0];
+
+        // 1. Read file and convert to base64
+        const fileBuffer = fs.readFileSync(filePath);
+        const base64Data = fileBuffer.toString('base64');
+
+        // 2. Setup Gemini
+        const model = ai.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+        const prompt = `You are a high-precision Resume Parser. 
+Extract all information from this resume file and return it in the following JSON format ONLY. 
+If a field is missing, use an empty string "" or empty array [].
+
+JSON Schema:
+{
+  "personal_info": {
+    "full_name": "",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "linkedin": "",
+    "website": "",
+    "profession": ""
+  },
+  "professional_summary": "",
+  "skills": ["skill1", "skill2"],
+  "experience": [
+    {
+      "company": "",
+      "position": "",
+      "start_date": "",
+      "end_date": "",
+      "description": "",
+      "is_current": false
+    }
+  ],
+  "education": [
+    {
+      "institution": "",
+      "degree": "",
+      "field": "",
+      "graduation_date": "",
+      "gpa": ""
+    }
+  ],
+  "project": [
+    {
+      "name": "",
+      "type": "",
+      "description": ""
+    }
+  ]
+}
+
+Strictly return ONLY valid JSON. No conversational text, no markdown code blocks.`;
+
+        // 3. Call Gemini
+        const result = await model.generateContent([
+            prompt,
+            {
+                inlineData: {
+                    data: base64Data,
+                    mimeType: mimeType
+                }
+            }
+        ]);
+
+        const response = await result.response;
+        let text = response.text().trim();
+        
+        // Cleanup JSON markdown if present
+        if (text.startsWith('```')) {
+            text = text.replace(/```json?\n?/g, '').replace(/```$/g, '').trim();
+        }
+
+        // 4. Parse JSON
+        let extractedData;
+        try {
+            extractedData = JSON.parse(text);
+        } catch (parseError) {
+            console.error('Gemini JSON Parse Error:', text);
+            return res.status(500).json({ message: 'Failed to parse AI extraction results. Please try a different file.' });
+        }
+
+        // 5. Create Resume in DB
+        const resume = await Resume.create({
+            userId: req.user._id,
+            title: resumeTitle,
+            ...extractedData
+        });
+
+        // 6. Cleanup local file
+        fs.unlinkSync(filePath);
+
+        res.status(201).json(resume);
+    } catch (error) {
+        console.error('Upload and extract error:', error.message);
+        // Cleanup file on error
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        res.status(500).json({ message: 'Failed to extract resume data. Please try again or fill manually.' });
+    }
+};
+
+module.exports = { createResume, getResumes, getResumeById, updateResume, deleteResume, uploadAndExtractResume };

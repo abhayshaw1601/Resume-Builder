@@ -5,3 +5,47 @@
 *{
   font-family: 'Outfit', sans-serif;
 }
+
+/* ─── PRINT STYLES ────────────────────────────────────────── */
+@media print {
+  /* Hide all UI elements */
+  nav, 
+  .no-print,
+  button,
+  .sticky {
+    display: none !important;
+  }
+
+  /* Reset body for clean print */
+  body, html {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 210mm;
+    height: 297mm;
+  }
+
+  /* Remove browser headers/footers (date, URL, page title) */
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  /* Ensure resume container is top-left and unscaled */
+  .preview-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+    border: none !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+  }
+
+  .resume-paper {
+    transform: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+  }
+}

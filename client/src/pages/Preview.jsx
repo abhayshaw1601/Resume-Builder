@@ -119,7 +119,7 @@ const Preview = () => {
     return (
         <div className="min-h-screen bg-black">
             {/* Top Bar */}
-            <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-md border-b border-white/10">
+            <div className="sticky top-16 z-30 bg-gray-900/80 backdrop-blur-md border-b border-white/10 no-print">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3 min-w-0">
                         <div className="w-2 h-2 rounded-full bg-[#A6FF5D] shrink-0 animate-pulse" />
@@ -157,11 +157,11 @@ const Preview = () => {
             </div>
 
             {/* Resume Document */}
-            <div className="max-w-5xl mx-auto py-8 sm:py-12 px-4">
+            <div className="max-w-5xl mx-auto py-8 sm:py-12 px-4 preview-container">
                 <div className="bg-gray-900/40 rounded-2xl p-4 sm:p-8 border border-white/10 shadow-inner">
                     <div className="flex justify-center">
                         <div
-                            className="bg-white text-gray-900 shadow-2xl flex flex-col shrink-0 transition-all duration-300 print:shadow-none"
+                            className="bg-white text-gray-900 shadow-2xl flex flex-col shrink-0 transition-all duration-300 print:shadow-none print:m-0 resume-paper"
                             style={{
                                 width: '210mm',
                                 minHeight: '297mm',

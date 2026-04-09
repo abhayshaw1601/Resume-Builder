@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeftIcon, DownloadIcon, SaveIcon, Loader2Icon } from 'lucide-react';
+import { ArrowLeftIcon, DownloadIcon, SaveIcon, Loader2Icon, SparklesIcon, XIcon } from 'lucide-react';
 import FormEditor from '../components/builder/FormEditor';
 import ResumePreview from '../components/builder/ResumePreview';
 import API from '../api/axios';
@@ -11,6 +11,9 @@ const ResumeBuilder = () => {
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saveStatus, setSaveStatus] = useState('') // 'saved' | 'error' | ''
+  const [analyzing, setAnalyzing] = useState(false)
+  const [analysisData, setAnalysisData] = useState(null)
+  const [showAnalysis, setShowAnalysis] = useState(false)
 
   const [resumeData, setResumeData] = useState(
     {
@@ -32,6 +35,8 @@ const ResumeBuilder = () => {
       },
       public: false,
       accent_color: '#A6FF5D',
+      font_size: 16,
+      section_spacing: 24,
       template: 'classic',
     }
   )
@@ -42,6 +47,8 @@ const ResumeBuilder = () => {
     title: dbResume.title || '',
     template: dbResume.template || 'classic',
     accent_color: dbResume.accent_color || '#A6FF5D',
+    font_size: dbResume.font_size || 16,
+    section_spacing: dbResume.section_spacing || 24,
     public: dbResume.public || false,
     personal_info: {
       name: dbResume.personal_info?.full_name || '',
@@ -84,6 +91,8 @@ const ResumeBuilder = () => {
     title: builderData.title,
     template: builderData.template,
     accent_color: builderData.accent_color,
+    font_size: builderData.font_size,
+    section_spacing: builderData.section_spacing,
     public: builderData.public,
     personal_info: {
       full_name: builderData.personal_info?.name || '',
@@ -148,11 +157,11 @@ const ResumeBuilder = () => {
       const payload = adaptToDB(resumeData)
 
       if (resumeId === 'new') {
-        // Create new resume
-        const { data } = await API.post('/resumes', { title: resumeData.title || 'Untitled Resume' })
-        // Then update with full data
-        await API.put(`/resumes/${data._id}`, payload)
+        // Create new resume with full data in one call
+        const { data } = await API.post('/resumes', payload)
         setResumeData(prev => ({ ...prev, _id: data._id }))
+        // Navigate to the real ID so future saves use PUT
+        window.history.replaceState(null, '', `/app/builder/${data._id}`)
       } else {
         // Update existing
         await API.put(`/resumes/${resumeId}`, payload)
@@ -169,9 +178,35 @@ const ResumeBuilder = () => {
     }
   }
 
+  const handleAnalyze = async () => {
+    try {
+      // Must save first so the DB has latest data
+      if (resumeId !== 'new') {
+        await handleSave()
+      }
+
+      const id = resumeData._id || resumeId
+      if (!id || id === 'new') return
+
+      setAnalyzing(true)
+      const { data } = await API.post(`/analyze/${id}`)
+      setAnalysisData(data.analysis)
+      setShowAnalysis(true)
+    } catch (error) {
+      console.error('Analyze error:', error.message)
+      alert(error.response?.data?.message || 'Failed to analyze resume. Please try again.')
+    } finally {
+      setAnalyzing(false)
+    }
+  }
+
   useEffect(() => {
     loadExistingResume()
   }, [resumeId])
+
+  const handlePrint = () => {
+    window.print();
+  }
 
   if (loading) {
     return (
@@ -209,8 +244,24 @@ const ResumeBuilder = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors">
+        <div className="flex items-center gap-3 no-print">
+          {/* AI Analyze Button */}
+          <button
+            onClick={handleAnalyze}
+            disabled={analyzing || resumeId === 'new'}
+            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/30 rounded-lg text-sm font-medium text-purple-300 transition-all disabled:opacity-50 cursor-pointer"
+          >
+            {analyzing ? (
+              <Loader2Icon size={16} className="animate-spin" />
+            ) : (
+              <SparklesIcon size={16} />
+            )}
+            {analyzing ? 'Analyzing...' : 'AI Analyze'}
+          </button>
+          <button 
+            onClick={handlePrint}
+            className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors cursor-pointer"
+          >
             <DownloadIcon size={16} />
             Export PDF
           </button>
@@ -226,10 +277,10 @@ const ResumeBuilder = () => {
       </div>
 
       {/* Main Builder Split Layout */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
         
         {/* Left Side: Form Editor */}
-        <div className="w-full lg:w-[45%] h-full overflow-y-auto custom-scrollbar pt-6 pb-20 px-6 bg-gray-900/30">
+        <div className="w-full lg:w-[45%] h-full overflow-y-auto custom-scrollbar pt-6 pb-20 px-6 bg-gray-900/30 no-print">
           <FormEditor resumeData={resumeData} setResumeData={setResumeData} />
         </div>
 
@@ -237,6 +288,177 @@ const ResumeBuilder = () => {
         <div className="hidden lg:flex flex-1 h-full bg-black/50 p-6 overflow-hidden">
           <ResumePreview resumeData={resumeData} />
         </div>
+
+        {/* AI Analysis Panel (Slide-over) */}
+        {showAnalysis && analysisData && (
+          <div className="absolute inset-0 z-30 flex">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setShowAnalysis(false)}
+            />
+            
+            {/* Panel */}
+            <div className="absolute right-0 top-0 bottom-0 w-full md:w-[520px] bg-gray-900 border-l border-white/10 overflow-y-auto custom-scrollbar shadow-2xl z-10">
+              {/* Panel Header */}
+              <div className="sticky top-0 bg-gray-900/95 backdrop-blur-md border-b border-white/10 px-6 py-4 flex items-center justify-between z-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                    <SparklesIcon size={16} className="text-purple-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-base font-bold text-white">AI Analysis</h2>
+                    <p className="text-[10px] uppercase tracking-widest text-gray-500">Powered by Gemini 2.5 Flash</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAnalysis(false)}
+                  className="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors cursor-pointer"
+                >
+                  <XIcon size={16} />
+                </button>
+              </div>
+
+              <div className="p-6 flex flex-col gap-6">
+                {/* ATS Score Ring */}
+                <div className="flex items-center gap-6 p-5 bg-white/5 border border-white/10 rounded-2xl">
+                  <div className="relative w-24 h-24 shrink-0">
+                    <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
+                      <circle 
+                        cx="50" cy="50" r="42" fill="none" 
+                        stroke={analysisData.ats_score >= 80 ? '#A6FF5D' : analysisData.ats_score >= 60 ? '#F59E0B' : '#EF4444'}
+                        strokeWidth="8" strokeLinecap="round"
+                        strokeDasharray={`${analysisData.ats_score * 2.64} 264`}
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <span className="text-2xl font-bold text-white">{analysisData.ats_score}</span>
+                      <span className="text-[9px] text-gray-500 uppercase tracking-wider">ATS</span>
+                    </div>
+                  </div>
+                  <div>
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${
+                      analysisData.overall_rating === 'Excellent' ? 'bg-[#A6FF5D]/20 text-[#A6FF5D]' :
+                      analysisData.overall_rating === 'Good' ? 'bg-blue-500/20 text-blue-400' :
+                      analysisData.overall_rating === 'Average' ? 'bg-yellow-500/20 text-yellow-400' :
+                      'bg-red-500/20 text-red-400'
+                    }`}>{analysisData.overall_rating}</span>
+                    <p className="text-sm text-gray-400 leading-relaxed">{analysisData.summary}</p>
+                  </div>
+                </div>
+
+                {/* Section Scores */}
+                {analysisData.section_scores && (
+                  <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
+                    <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-purple-400" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                      Section Scores
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      {Object.entries(analysisData.section_scores).map(([key, val]) => (
+                        <div key={key} className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2">
+                          <span className="text-xs text-gray-400 capitalize">{key.replace('_', ' ')}</span>
+                          <span className={`text-xs font-bold ${val >= 80 ? 'text-[#A6FF5D]' : val >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>{val}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Strengths */}
+                {analysisData.strengths?.length > 0 && (
+                  <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
+                    <h3 className="text-sm font-semibold text-[#A6FF5D] mb-3 flex items-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                      Strengths
+                    </h3>
+                    <ul className="space-y-2">
+                      {analysisData.strengths.map((s, i) => (
+                        <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
+                          <span className="text-[#A6FF5D] mt-0.5 shrink-0">•</span>
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Weaknesses */}
+                {analysisData.weaknesses?.length > 0 && (
+                  <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
+                    <h3 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                      Weaknesses
+                    </h3>
+                    <ul className="space-y-2">
+                      {analysisData.weaknesses.map((w, i) => (
+                        <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
+                          <span className="text-red-400 mt-0.5 shrink-0">•</span>
+                          {w}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Suggestions */}
+                {analysisData.suggestions?.length > 0 && (
+                  <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
+                    <h3 className="text-sm font-semibold text-blue-400 mb-3 flex items-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                      Suggestions
+                    </h3>
+                    <ul className="space-y-2">
+                      {analysisData.suggestions.map((s, i) => (
+                        <li key={i} className="text-sm text-gray-300 flex items-start gap-2">
+                          <span className="text-blue-400 mt-0.5 shrink-0">{i + 1}.</span>
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Keyword Analysis */}
+                {analysisData.keyword_analysis && (
+                  <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
+                    <h3 className="text-sm font-semibold text-purple-400 mb-3 flex items-center gap-2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      Keyword Analysis
+                    </h3>
+                    
+                    {analysisData.keyword_analysis.present_keywords?.length > 0 && (
+                      <div className="mb-3">
+                        <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Present</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {analysisData.keyword_analysis.present_keywords.map((k, i) => (
+                            <span key={i} className="px-2 py-0.5 bg-[#A6FF5D]/10 text-[#A6FF5D] text-xs rounded-md">{k}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {analysisData.keyword_analysis.missing_keywords?.length > 0 && (
+                      <div className="mb-3">
+                        <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Missing</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {analysisData.keyword_analysis.missing_keywords.map((k, i) => (
+                            <span key={i} className="px-2 py-0.5 bg-red-500/10 text-red-400 text-xs rounded-md">{k}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {analysisData.keyword_analysis.recommendation && (
+                      <p className="text-sm text-gray-400 mt-2 italic">{analysisData.keyword_analysis.recommendation}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
 

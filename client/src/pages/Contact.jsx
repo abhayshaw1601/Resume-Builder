@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Navbar from '../components/Navbar'
+import API from '../api/axios'
 
 const Contact = () => {
     const [formData, setFormData] = useState({
@@ -9,17 +9,28 @@ const Contact = () => {
         message: ''
     })
     const [submitted, setSubmitted] = useState(false)
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
     const handleChange = (e) => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+        setError('')
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        // TODO: integrate with backend
-        setSubmitted(true)
-        setTimeout(() => setSubmitted(false), 4000)
-        setFormData({ name: '', email: '', subject: '', message: '' })
+        setLoading(true)
+        setError('')
+        try {
+            await API.post('/contact', formData)
+            setSubmitted(true)
+            setTimeout(() => setSubmitted(false), 4000)
+            setFormData({ name: '', email: '', subject: '', message: '' })
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to send message. Please try again.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (

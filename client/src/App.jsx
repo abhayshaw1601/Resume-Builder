@@ -10,6 +10,8 @@ import Layout from './pages/Layout'
 import Contact from './pages/Contact'
 import Feature from './pages/Feature'
 import PublicLayout from './components/PublicLayout'
+import ProtectedRoute from './components/ProtectedRoute'
+import ManagementPreview from './pages/ManagementPreview'
 
 const App = () => {
   return (
@@ -23,10 +25,15 @@ const App = () => {
           <Route path="/view/:resumeId" element={<Preview />} />
         </Route>
 
-        {/* Dashboard Pages */}
-        <Route path="/app" element={<Layout />}>
+        {/* Protected Dashboard Pages */}
+        <Route path="/app" element={
+          <ProtectedRoute>
+            <Layout />
+          </ProtectedRoute>
+        }>
           <Route index element={<Dashboard />} />
           <Route path="builder/:resumeId" element={<ResumeBuilder />} />
+          <Route path="preview/:resumeId" element={<ManagementPreview />} />
         </Route>
 
         {/* Full screen Auth Pages */}

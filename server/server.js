@@ -26,6 +26,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/resumes', require('./routes/resumeRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
+app.use('/api/analyze', require('./routes/analyzeRoutes'));
 
 // Health check
 app.get('/', (req, res) => {

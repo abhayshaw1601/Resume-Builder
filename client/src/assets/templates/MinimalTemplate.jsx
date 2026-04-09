@@ -1,18 +1,23 @@
 
-const MinimalTemplate = ({ data, accentColor }) => {
+const MinimalTemplate = ({ data, accentColor, fontSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        const [year, month] = dateStr.split("-");
-        return new Date(year, month - 1).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "short"
-        });
+        if (!dateStr || dateStr === "Invalid Date") return "";
+        try {
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) return dateStr;
+            return date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short"
+            });
+        } catch (e) {
+            return dateStr;
+        }
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-8 bg-white text-gray-900 font-light">
+        <div className="max-w-4xl mx-auto p-8 bg-white text-gray-900 font-light" style={{ fontSize: fontSize || 16 }}>
             {/* Header */}
-            <header className="mb-10">
+            <header className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
                 <h1 className="text-4xl font-thin mb-4 tracking-wide">
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
@@ -32,7 +37,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
 
             {/* Professional Summary */}
             {data.professional_summary && (
-                <section className="mb-10">
+                <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
                     <p className=" text-gray-700">
                         {data.professional_summary}
                     </p>
@@ -41,7 +46,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
 
             {/* Experience */}
             {data.experience && data.experience.length > 0 && (
-                <section className="mb-10">
+                <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
                     <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
                         Experience
                     </h2>
@@ -69,7 +74,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
 
             {/* Projects */}
             {data.project && data.project.length > 0 && (
-                <section className="mb-10">
+                <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
                     <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
                         Projects
                     </h2>
@@ -87,7 +92,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
 
             {/* Education */}
             {data.education && data.education.length > 0 && (
-                <section className="mb-10">
+                <section className="mb-10" style={{ marginBottom: sectionSpacing || 40 }}>
                     <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
                         Education
                     </h2>
@@ -113,7 +118,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
 
             {/* Skills */}
             {data.skills && data.skills.length > 0 && (
-                <section>
+                <section style={{ marginBottom: sectionSpacing || 40 }}>
                     <h2 className="text-sm uppercase tracking-widest mb-6 font-medium" style={{ color: accentColor }}>
                         Skills
                     </h2>
