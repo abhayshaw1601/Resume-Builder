@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const Resume = require('../models/Resume');
+const User = require('../models/User');
 
 // @desc    Create a new resume
 // @route   POST /api/resumes
@@ -32,7 +34,7 @@ const getResumes = async (req, res) => {
 
 // @desc    Get a single resume by ID
 // @route   GET /api/resumes/:id
-// @access  Private / Public (if resume is public)
+// @access  Public (public resumes) / Private (private resumes need owner token)
 const getResumeById = async (req, res) => {
     try {
         const resume = await Resume.findById(req.params.id);
@@ -41,8 +43,25 @@ const getResumeById = async (req, res) => {
             return res.status(404).json({ message: 'Resume not found' });
         }
 
-        // Allow access if the resume is public OR if the user owns it
-        if (resume.public || (req.user && resume.userId.toString() === req.user._id.toString())) {
+        // Public resumes are accessible to everyone
+        if (resume.public) {
+            return res.json(resume);
+        }
+
+        // Private resumes require the owner's token
+        let token;
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            token = req.headers.authorization.split(' ')[1];
+        }
+
+        if (!token) {
+            return res.status(403).json({ message: 'Not authorized to view this resume' });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select('-password');
+
+        if (user && resume.userId.toString() === user._id.toString()) {
             return res.json(resume);
         }
 

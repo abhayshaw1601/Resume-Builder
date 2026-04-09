@@ -21,15 +21,18 @@ const ResumePreview = ({ resumeData }) => {
       photo_settings: resumeData.personal_info?.photo_settings || null
     },
     professional_summary: resumeData.summary || '',
-    experience: (resumeData.experience || []).map(exp => ({
-      position: exp.title,
-      company: exp.company,
-      start_date: exp.duration?.split('-')[0]?.trim() || exp.duration || '',
-      end_date: exp.duration?.split('-')[1]?.trim() || '',
-      is_current: exp.duration?.toLowerCase().includes('present') || false,
-      description: exp.description,
-      link: exp.link || ''
-    })),
+    experience: (resumeData.experience || []).map(exp => {
+      const parts = exp.duration?.split(' - ') || []
+      return {
+        position: exp.title,
+        company: exp.company,
+        start_date: parts[0]?.trim() || '',
+        end_date: parts[1]?.trim() || '',
+        is_current: exp.duration?.toLowerCase().includes('present') || false,
+        description: exp.description,
+        link: exp.link || ''
+      }
+    }),
     education: (resumeData.education || []).map(edu => ({
       degree: edu.degree,
       institution: edu.school,
