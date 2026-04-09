@@ -12,14 +12,16 @@ connectDB();
 const app = express();
 
 // ─── Middleware ───────────────────────────────────────────
-// In server/server.js
 app.use(cors({
     origin: [
         'http://localhost:5173',
         'https://resume-builder-xi-amber-90.vercel.app'
     ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
