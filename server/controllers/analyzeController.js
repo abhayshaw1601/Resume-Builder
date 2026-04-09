@@ -1,7 +1,7 @@
 const { GoogleGenAI } = require('@google/genai');
 const Resume = require('../models/Resume');
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
 
 // @desc    Analyze a resume with Gemini 2.5 Flash
 // @route   POST /api/analyze/:resumeId

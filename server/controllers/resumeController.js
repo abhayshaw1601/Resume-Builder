@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const Resume = require('../models/Resume');
 const User = require('../models/User');
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+const ai = new GoogleGenAI(process.env.GEMINI_API_KEY);
 
 // @desc    Create a new resume
 // @route   POST /api/resumes
@@ -139,8 +139,9 @@ const deleteResume = async (req, res) => {
 // @access  Private
 const uploadAndExtractResume = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
+        if (!process.env.GEMINI_API_KEY) {
+            console.error('CRITICAL: GEMINI_API_KEY is missing from environment variables.');
+            return res.status(500).json({ message: 'Server configuration error: AI service unavailable.' });
         }
 
         const mimeType = req.file.mimetype;
@@ -234,7 +235,7 @@ Strictly return ONLY valid JSON. No conversational text, no markdown code blocks
 
         // 3. Call Gemini
         const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
+            model: 'gemini-2.5-flash-lite',
             contents: contents
         });
 
@@ -263,8 +264,16 @@ Strictly return ONLY valid JSON. No conversational text, no markdown code blocks
 
         res.status(201).json(resume);
     } catch (error) {
-        console.error('Upload and extract error:', error.message);
-        res.status(500).json({ message: 'Failed to extract resume data. Please try again or fill manually.' });
+        console.error('--- RESUME UPLOAD ERROR ---');
+        console.error('Error Context:', error.name || 'Unknown Error');
+        console.error('Error Message:', error.message);
+        if (error.stack) console.error('Stack Trace:', error.stack.split('\n')[0]);
+        console.error('---------------------------');
+
+        res.status(500).json({ 
+            message: 'Failed to extract resume data. Please try again or fill manually.',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 
