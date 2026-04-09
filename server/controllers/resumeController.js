@@ -143,15 +143,13 @@ const uploadAndExtractResume = async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded' });
         }
 
-        const filePath = req.file.path;
         const mimeType = req.file.mimetype;
         const resumeTitle = req.body.title || req.file.originalname.split('.')[0];
 
-        // 1. Read file and convert to base64
-        // 1. Read file
-        const fileBuffer = fs.readFileSync(filePath);
+        // 1. Get file content from memory buffer
+        const fileBuffer = req.file.buffer;
 
-        // 3. Setup Prompt & Contents based on File Type
+        // ... (Prompt remains same)
         const prompt = `You are a high-precision Resume Parser. 
 Extract all information from this resume file and return it in the following JSON format ONLY. 
 If a field is missing, use an empty string "" or empty array [].
@@ -207,9 +205,9 @@ Strictly return ONLY valid JSON. No conversational text, no markdown code blocks
             mimeType === 'application/msword' ||
             req.file.originalname.toLowerCase().endsWith('.docx')
         ) {
-            // Use Mammoth to extract raw text from Word Document
+            // Use Mammoth to extract raw text from Word Document Using Buffer
             try {
-                const result = await mammoth.extractRawText({ path: filePath });
+                const result = await mammoth.extractRawText({ buffer: fileBuffer });
                 extractedWordText = result.value;
             } catch (err) {
                 console.error('Mammoth extraction failed:', err);
@@ -236,7 +234,7 @@ Strictly return ONLY valid JSON. No conversational text, no markdown code blocks
 
         // 3. Call Gemini
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-2.0-flash',
             contents: contents
         });
 
@@ -263,16 +261,9 @@ Strictly return ONLY valid JSON. No conversational text, no markdown code blocks
             ...extractedData
         });
 
-        // 6. Cleanup local file
-        fs.unlinkSync(filePath);
-
         res.status(201).json(resume);
     } catch (error) {
         console.error('Upload and extract error:', error.message);
-        // Cleanup file on error
-        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
-        }
         res.status(500).json({ message: 'Failed to extract resume data. Please try again or fill manually.' });
     }
 };
