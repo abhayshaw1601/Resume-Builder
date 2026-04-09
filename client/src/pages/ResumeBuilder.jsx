@@ -223,7 +223,7 @@ const ResumeBuilder = () => {
     <div className="w-full text-white h-[calc(100vh-80px)] flex flex-col -mt-8 -mx-8 sm:w-[calc(100%+4rem)]">
       
       {/* Builder Topbar */}
-      <div className="h-16 border-b border-white/10 bg-gray-900/50 flex items-center justify-between px-6 shrink-0 relative z-20 shadow-lg">
+      <div className="h-16 border-b border-white/10 bg-gray-900/50 flex items-center justify-between px-6 shrink-0 relative z-20 shadow-lg no-print">
         <div className="flex items-center gap-4">
           <Link to="/app" className='inline-flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full transition-colors'>
             <ArrowLeftIcon size={18} />
@@ -285,7 +285,7 @@ const ResumeBuilder = () => {
         </div>
 
         {/* Right Side: Live Document Preview */}
-        <div className="hidden lg:flex flex-1 h-full bg-black/50 p-6 overflow-hidden">
+        <div className="hidden lg:flex flex-1 h-full bg-black/50 p-6 overflow-hidden print:flex print:p-0 print:bg-white print:fixed print:inset-0 print:z-[1000]">
           <ResumePreview resumeData={resumeData} />
         </div>
 

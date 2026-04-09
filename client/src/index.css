@@ -16,13 +16,15 @@
     display: none !important;
   }
 
-  /* Reset body for clean print */
-  body, html {
+  /* Reset body and full height wrappers for clean print */
+  body, html, #root, .min-h-screen, .h-screen, .h-full, .overflow-hidden, .overflow-auto, .overflow-y-auto {
     background: white !important;
     margin: 0 !important;
     padding: 0 !important;
-    width: 210mm;
-    height: 297mm;
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    width: auto !important;
   }
 
   /* Remove browser headers/footers (date, URL, page title) */
@@ -39,6 +41,9 @@
     border: none !important;
     width: 210mm !important;
     min-height: 297mm !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
   }
 
   .resume-paper {
@@ -47,5 +52,8 @@
     box-shadow: none !important;
     width: 210mm !important;
     min-height: 297mm !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
   }
 }

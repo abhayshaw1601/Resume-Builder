@@ -77,11 +77,11 @@ const ResumePreview = ({ resumeData }) => {
   }
 
   return (
-    <div className="bg-gray-900/40 rounded-2xl p-4 md:p-8 flex items-center justify-center border border-white/10 shadow-inner h-full w-full overflow-y-auto custom-scrollbar relative">
+    <div className="bg-gray-900/40 rounded-2xl p-4 md:p-8 flex items-center justify-center border border-white/10 shadow-inner h-full w-full overflow-y-auto custom-scrollbar relative preview-container">
       <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#A6FF5D]/5 blur-[120px] rounded-full pointer-events-none -z-10" />
       {/* A4 Paper Scaled Container */}
       <div 
-        className="bg-white text-gray-900 transform origin-top shadow-2xl flex flex-col shrink-0 transition-all duration-300 pointer-events-none self-start mt-4 relative" 
+        className="bg-white text-gray-900 transform origin-top shadow-2xl flex flex-col shrink-0 transition-all duration-300 pointer-events-none self-start mt-4 relative resume-paper" 
         style={{
             width: '210mm',
             minHeight: '297mm',
