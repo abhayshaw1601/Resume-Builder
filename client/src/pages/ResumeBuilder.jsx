@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import React, { useState, useEffect, useRef } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeftIcon, DownloadIcon, SaveIcon, Loader2Icon, SparklesIcon, XIcon, FileDown } from 'lucide-react';
 import FormEditor from '../components/builder/FormEditor';
 import ResumePreview from '../components/builder/ResumePreview';
@@ -15,6 +15,10 @@ const ResumeBuilder = () => {
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisData, setAnalysisData] = useState(null)
   const [showAnalysis, setShowAnalysis] = useState(false)
+  const [showDirtyModal, setShowDirtyModal] = useState(false)
+  
+  const navigate = useNavigate()
+  const baselineRef = useRef(null)
 
   const [resumeData, setResumeData] = useState(
     {
@@ -145,6 +149,7 @@ const ResumeBuilder = () => {
       const { data } = await API.get(`/resumes/${resumeId}`)
       const adapted = adaptFromDB(data)
       setResumeData(adapted)
+      baselineRef.current = JSON.stringify(adaptToDB(adapted))
       document.title = data.title || 'Resume Builder'
     } catch (error) {
       console.error('Failed to load resume:', error.message)
@@ -170,6 +175,8 @@ const ResumeBuilder = () => {
         // Update existing
         await API.put(`/resumes/${resumeId}`, payload)
       }
+      
+      baselineRef.current = JSON.stringify(payload)
 
       setSaveStatus('saved')
       setTimeout(() => setSaveStatus(''), 3000)
@@ -212,6 +219,32 @@ const ResumeBuilder = () => {
     window.print();
   }
 
+  const isDirty = baselineRef.current && baselineRef.current !== JSON.stringify(adaptToDB(resumeData))
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault()
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?'
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [isDirty])
+
+  const handleBackClick = () => {
+    if (isDirty) {
+      setShowDirtyModal(true)
+    } else {
+      navigate('/app')
+    }
+  }
+
+  const handleForceExit = () => {
+    setShowDirtyModal(false)
+    navigate('/app')
+  }
+
   if (loading) {
     return (
       <div className="w-full text-white h-[calc(100vh-80px)] flex items-center justify-center -mt-8 -mx-8 sm:w-[calc(100%+4rem)]">
@@ -225,25 +258,24 @@ const ResumeBuilder = () => {
 
   return (
     <div className="w-full text-white h-[calc(100vh-80px)] flex flex-col -mt-8 -mx-8 sm:w-[calc(100%+4rem)]">
-      
+
       {/* Builder Topbar */}
       <div className="h-16 border-b border-white/10 bg-gray-900/50 flex items-center justify-between px-6 shrink-0 relative z-20 shadow-lg no-print">
         <div className="flex items-center gap-4">
-          <Link to="/app" className='inline-flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full transition-colors'>
+          <button onClick={handleBackClick} className='inline-flex items-center justify-center w-10 h-10 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-full transition-colors'>
             <ArrowLeftIcon size={18} />
-          </Link>
+          </button>
           <div className="flex flex-col">
             <h1 className="text-lg font-bold bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent leading-none mb-1">
               {resumeId === 'new' ? 'New Interactive Resume' : resumeData.title || 'Untitled Resume'}
             </h1>
-            <span className={`text-[10px] uppercase tracking-widest ${
-              saveStatus === 'saved' ? 'text-[#A6FF5D]' : 
-              saveStatus === 'error' ? 'text-red-400' : 
-              'text-gray-500'
-            }`}>
-              {saveStatus === 'saved' ? '✓ Saved successfully' : 
-               saveStatus === 'error' ? '✗ Failed to save' : 
-               saving ? 'Saving...' : 'Unsaved Changes'}
+            <span className={`text-[10px] uppercase tracking-widest ${saveStatus === 'saved' ? 'text-[#A6FF5D]' :
+                saveStatus === 'error' ? 'text-red-400' :
+                  'text-gray-500'
+              }`}>
+              {saveStatus === 'saved' ? '✓ Saved successfully' :
+                saveStatus === 'error' ? '✗ Failed to save' :
+                  saving ? 'Saving...' : 'Unsaved Changes'}
             </span>
           </div>
         </div>
@@ -263,7 +295,7 @@ const ResumeBuilder = () => {
             {analyzing ? 'Analyzing...' : 'AI Analyze'}
           </button>
           <div className="hidden sm:flex items-center gap-2">
-            <button 
+            <button
               onClick={handlePrint}
               className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors cursor-pointer"
               title="Export PDF"
@@ -271,21 +303,21 @@ const ResumeBuilder = () => {
               <DownloadIcon size={16} />
               PDF
             </button>
-            <button 
+            {/* <button 
               onClick={() => exportToWord(resumeData)}
               className="flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-lg text-sm font-medium transition-colors cursor-pointer"
               title="Export Word Document (ATS Friendly)"
-            >
-              <FileDown size={16} />
+            > */}
+            {/* <FileDown size={16} />
               Word
-            </button>
+            </button> */}
           </div>
-          <button 
+          <button
             onClick={handleSave}
             disabled={saving}
             className="flex items-center gap-2 px-5 py-2 bg-[#A6FF5D] hover:bg-[#A6FF5D]/90 text-black rounded-lg text-sm font-bold transition-all shadow-[0_0_15px_rgba(166,255,93,0.3)] disabled:opacity-70 cursor-pointer"
           >
-            {saving ? <Loader2Icon size={16} className="animate-spin" /> : <SaveIcon size={16}/>}
+            {saving ? <Loader2Icon size={16} className="animate-spin" /> : <SaveIcon size={16} />}
             {saving ? 'Saving...' : 'Save'}
           </button>
         </div>
@@ -293,7 +325,7 @@ const ResumeBuilder = () => {
 
       {/* Main Builder Split Layout */}
       <div className="flex-1 flex overflow-hidden relative">
-        
+
         {/* Left Side: Form Editor */}
         <div className="w-full lg:w-[45%] h-full overflow-y-auto custom-scrollbar pt-6 pb-20 px-6 bg-gray-900/30 no-print">
           <FormEditor resumeData={resumeData} setResumeData={setResumeData} />
@@ -308,11 +340,11 @@ const ResumeBuilder = () => {
         {showAnalysis && analysisData && (
           <div className="absolute inset-0 z-30 flex">
             {/* Backdrop */}
-            <div 
+            <div
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setShowAnalysis(false)}
             />
-            
+
             {/* Panel */}
             <div className="absolute right-0 top-0 bottom-0 w-full md:w-[520px] bg-gray-900 border-l border-white/10 overflow-y-auto custom-scrollbar shadow-2xl z-10">
               {/* Panel Header */}
@@ -340,8 +372,8 @@ const ResumeBuilder = () => {
                   <div className="relative w-24 h-24 shrink-0">
                     <svg className="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
                       <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="8" />
-                      <circle 
-                        cx="50" cy="50" r="42" fill="none" 
+                      <circle
+                        cx="50" cy="50" r="42" fill="none"
                         stroke={analysisData.ats_score >= 80 ? '#A6FF5D' : analysisData.ats_score >= 60 ? '#F59E0B' : '#EF4444'}
                         strokeWidth="8" strokeLinecap="round"
                         strokeDasharray={`${analysisData.ats_score * 2.64} 264`}
@@ -353,12 +385,11 @@ const ResumeBuilder = () => {
                     </div>
                   </div>
                   <div>
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${
-                      analysisData.overall_rating === 'Excellent' ? 'bg-[#A6FF5D]/20 text-[#A6FF5D]' :
-                      analysisData.overall_rating === 'Good' ? 'bg-blue-500/20 text-blue-400' :
-                      analysisData.overall_rating === 'Average' ? 'bg-yellow-500/20 text-yellow-400' :
-                      'bg-red-500/20 text-red-400'
-                    }`}>{analysisData.overall_rating}</span>
+                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-2 ${analysisData.overall_rating === 'Excellent' ? 'bg-[#A6FF5D]/20 text-[#A6FF5D]' :
+                        analysisData.overall_rating === 'Good' ? 'bg-blue-500/20 text-blue-400' :
+                          analysisData.overall_rating === 'Average' ? 'bg-yellow-500/20 text-yellow-400' :
+                            'bg-red-500/20 text-red-400'
+                      }`}>{analysisData.overall_rating}</span>
                     <p className="text-sm text-gray-400 leading-relaxed">{analysisData.summary}</p>
                   </div>
                 </div>
@@ -367,7 +398,7 @@ const ResumeBuilder = () => {
                 {analysisData.section_scores && (
                   <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
                     <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-purple-400" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" className="text-purple-400" strokeWidth="2"><rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" /><rect x="3" y="14" width="7" height="7" /><rect x="14" y="14" width="7" height="7" /></svg>
                       Section Scores
                     </h3>
                     <div className="grid grid-cols-2 gap-3">
@@ -385,7 +416,7 @@ const ResumeBuilder = () => {
                 {analysisData.strengths?.length > 0 && (
                   <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
                     <h3 className="text-sm font-semibold text-[#A6FF5D] mb-3 flex items-center gap-2">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" /></svg>
                       Strengths
                     </h3>
                     <ul className="space-y-2">
@@ -403,7 +434,7 @@ const ResumeBuilder = () => {
                 {analysisData.weaknesses?.length > 0 && (
                   <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
                     <h3 className="text-sm font-semibold text-red-400 mb-3 flex items-center gap-2">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" /></svg>
                       Weaknesses
                     </h3>
                     <ul className="space-y-2">
@@ -421,7 +452,7 @@ const ResumeBuilder = () => {
                 {analysisData.suggestions?.length > 0 && (
                   <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
                     <h3 className="text-sm font-semibold text-blue-400 mb-3 flex items-center gap-2">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="10" /><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" /><line x1="12" y1="17" x2="12.01" y2="17" /></svg>
                       Suggestions
                     </h3>
                     <ul className="space-y-2">
@@ -439,10 +470,10 @@ const ResumeBuilder = () => {
                 {analysisData.keyword_analysis && (
                   <div className="p-5 bg-white/[0.03] border border-white/[0.06] rounded-2xl">
                     <h3 className="text-sm font-semibold text-purple-400 mb-3 flex items-center gap-2">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
                       Keyword Analysis
                     </h3>
-                    
+
                     {analysisData.keyword_analysis.present_keywords?.length > 0 && (
                       <div className="mb-3">
                         <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-2">Present</p>
@@ -477,8 +508,43 @@ const ResumeBuilder = () => {
 
       </div>
 
+      {/* Dirty Confirmation Modal */}
+      {showDirtyModal && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center -mt-8 -mx-8">
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowDirtyModal(false)} />
+          <div className="relative bg-gray-900 border border-white/10 rounded-2xl p-6 w-[400px] shadow-2xl flex flex-col gap-4 z-10 m-4 text-center">
+            <h3 className="text-xl font-bold text-white">Unsaved Changes</h3>
+            <p className="text-gray-400 text-sm">You have unsaved changes to your resume. Are you sure you want to exit? Your modifications will be lost.</p>
+            <div className="flex items-center gap-3 mt-4 w-full">
+              <button 
+                onClick={() => setShowDirtyModal(false)} 
+                className="flex-1 px-4 py-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white rounded-xl transition-colors font-medium text-sm"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleForceExit} 
+                className="flex-1 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 border border-red-500/30 text-red-500 rounded-xl transition-colors font-medium text-sm"
+              >
+                Discard & Exit
+              </button>
+              <button 
+                onClick={async () => {
+                  await handleSave();
+                  navigate('/app');
+                }} 
+                disabled={saving}
+                className="flex-1 px-4 py-2 bg-[#A6FF5D] hover:bg-[#A6FF5D]/90 text-black rounded-xl transition-colors font-bold text-sm disabled:opacity-50"
+              >
+                {saving ? 'Saving...' : 'Save & Exit'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
 
-export default ResumeBuilder
+export default ResumeBuilder

@@ -1,6 +1,7 @@
-const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const mammoth = require('mammoth');
 const { GoogleGenAI } = require('@google/genai');
+const jwt = require('jsonwebtoken');
 const Resume = require('../models/Resume');
 const User = require('../models/User');
 
@@ -147,12 +148,10 @@ const uploadAndExtractResume = async (req, res) => {
         const resumeTitle = req.body.title || req.file.originalname.split('.')[0];
 
         // 1. Read file and convert to base64
+        // 1. Read file
         const fileBuffer = fs.readFileSync(filePath);
-        const base64Data = fileBuffer.toString('base64');
 
-        // 2. Setup Gemini
-        const model = ai.getGenerativeModel({ model: 'gemini-2.5-flash' });
-
+        // 3. Setup Prompt & Contents based on File Type
         const prompt = `You are a high-precision Resume Parser. 
 Extract all information from this resume file and return it in the following JSON format ONLY. 
 If a field is missing, use an empty string "" or empty array [].
@@ -200,19 +199,48 @@ JSON Schema:
 
 Strictly return ONLY valid JSON. No conversational text, no markdown code blocks.`;
 
-        // 3. Call Gemini
-        const result = await model.generateContent([
-            prompt,
-            {
-                inlineData: {
-                    data: base64Data,
-                    mimeType: mimeType
-                }
-            }
-        ]);
+        let contents = [];
+        let extractedWordText = '';
 
-        const response = await result.response;
-        let text = response.text().trim();
+        if (
+            mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' || 
+            mimeType === 'application/msword' ||
+            req.file.originalname.toLowerCase().endsWith('.docx')
+        ) {
+            // Use Mammoth to extract raw text from Word Document
+            try {
+                const result = await mammoth.extractRawText({ path: filePath });
+                extractedWordText = result.value;
+            } catch (err) {
+                console.error('Mammoth extraction failed:', err);
+                throw new Error('Failed to parse Word Document.');
+            }
+
+            contents = [
+                prompt,
+                { text: `Here is the resume content extracted from the Word Document:\n\n${extractedWordText}` }
+            ];
+        } else {
+            // PDF or image - send as base64 inlineData (Natively supported by Gemini)
+            const base64Data = fileBuffer.toString('base64');
+            contents = [
+                prompt,
+                {
+                    inlineData: {
+                        data: base64Data,
+                        mimeType: mimeType
+                    }
+                }
+            ];
+        }
+
+        // 3. Call Gemini
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: contents
+        });
+
+        let text = response.text ? response.text.trim() : '';
         
         // Cleanup JSON markdown if present
         if (text.startsWith('```')) {
