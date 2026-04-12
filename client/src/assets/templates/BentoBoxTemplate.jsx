@@ -38,10 +38,10 @@ const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                 </Card>
 
                 {/* Contact Card */}
-                <Card className="text-white" span={1}>
+                <Card className={isDarkMode ? 'text-black' : 'text-gray-900'} span={1}>
                     <div className="h-full rounded-lg p-1" style={{ background: accentBg || accentColor }}>
                         <div className="p-3">
-                            <h2 className="font-bold uppercase tracking-widest mb-3 text-white/80" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
+                            <h2 className="font-bold uppercase tracking-widest mb-3 opacity-80" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
                             <ul className="space-y-2 text-[0.75em]">
                                 {data.personal_info?.email && (
                                     <li className="flex items-center gap-2"><Mail size={11} className="opacity-70" />{data.personal_info.email}</li>

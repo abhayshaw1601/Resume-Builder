@@ -18,7 +18,7 @@ const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, hea
 	return (
 		<div className={`max-w-4xl mx-auto ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`} style={{ fontSize: fontSize || 16 }}>
 			{/* Header */}
-		<header className="p-8 text-white" style={{ background: accentBg || accentColor }}>
+		<header className={`p-8 ${isDarkMode ? 'text-black' : 'text-gray-900'}`} style={{ background: accentBg || accentColor }}>
 				<h1 className="font-light mb-3" style={{ fontSize: headingSize || 28 }}>
 					{data.personal_info?.full_name || "Your Name"}
 				</h1>

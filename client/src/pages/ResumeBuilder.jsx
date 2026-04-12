@@ -247,10 +247,56 @@ const ResumeBuilder = () => {
 
   if (loading) {
     return (
-      <div className="w-full text-white h-[calc(100vh-80px)] flex items-center justify-center -mt-8 -mx-8 sm:w-[calc(100%+4rem)]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-full border-4 border-white/10 border-t-[#A6FF5D] animate-spin" />
-          <p className="text-gray-400 text-sm">Loading resume...</p>
+      <div className="w-full text-white h-[calc(100vh-80px)] flex flex-col -mt-8 -mx-8 sm:w-[calc(100%+4rem)] bg-[#0a0a0a] animate-pulse">
+        {/* Builder Topbar Skeleton */}
+        <div className="h-16 border-b border-white/10 bg-gray-900/50 flex items-center justify-between px-6 shrink-0">
+            <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-white/5 rounded-full" />
+                <div className="flex flex-col gap-2">
+                    <div className="w-32 h-4 bg-white/10 rounded" />
+                    <div className="w-24 h-2 bg-white/5 rounded" />
+                </div>
+            </div>
+            <div className="hidden sm:flex items-center gap-3">
+                <div className="w-24 h-9 bg-white/5 rounded-lg" />
+                <div className="w-20 h-9 bg-white/5 rounded-lg" />
+                <div className="w-24 h-9 bg-white/10 rounded-lg" />
+            </div>
+        </div>
+
+        {/* Main Builder Split Layout Skeleton */}
+        <div className="flex-1 flex overflow-hidden">
+            {/* Left Side: Form Editor Skeleton */}
+            <div className="w-full lg:w-[45%] h-full pt-6 pb-20 px-6 bg-gray-900/30">
+                <div className="space-y-6">
+                    <div className="w-48 h-8 bg-white/10 rounded mb-6" />
+                    {Array.from({ length: 4 }).map((_, i) => (
+                        <div key={i} className="w-full bg-white/5 rounded-xl p-4 flex flex-col gap-4 border border-white/5">
+                            <div className="w-1/3 h-5 bg-white/10 rounded" />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="w-full h-10 bg-white/5 rounded" />
+                                <div className="w-full h-10 bg-white/5 rounded" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Right Side: Live Document Preview Skeleton */}
+            <div className="hidden lg:flex flex-1 h-full bg-black/50 p-6 flex-col items-center justify-center relative">
+                {/* Floating spinner */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-3 z-10">
+                   <div className="w-10 h-10 rounded-full border-4 border-white/5 border-t-[#A6FF5D]/50 animate-spin" />
+                   <span className="text-gray-500 font-medium tracking-widest text-sm uppercase">Loading Resume</span>
+                </div>
+                <div className="w-full max-w-[800px] h-full bg-white/5 rounded-sm border border-white/10 shadow-2xl opacity-10 p-12 flex flex-col gap-6">
+                     <div className="w-1/3 h-8 bg-white/20 rounded mx-auto mb-8" />
+                     <div className="w-full h-4 bg-white/10 rounded" />
+                     <div className="w-5/6 h-4 bg-white/10 rounded" />
+                     <div className="w-4/6 h-4 bg-white/10 rounded" />
+                     <div className="w-full h-32 bg-white/10 rounded mt-8" />
+                </div>
+            </div>
         </div>
       </div>
     )

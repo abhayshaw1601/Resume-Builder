@@ -33,6 +33,7 @@ const Navbar = () => {
                 </Link>
                 <div id="menu" className={`${mobileOpen ? 'max-md:w-full' : 'max-md:w-0'} max-md:fixed max-md:top-0 max-md:z-10 max-md:left-0 max-md:transition-all max-md:duration-300 max-md:overflow-hidden max-md:h-screen max-md:bg-black/50 max-md:backdrop-blur max-md:flex-col max-md:justify-center flex items-center gap-8 text-sm`}>
                     <Link to="/feature" onClick={() => setMobileOpen(false)} className="text-white/70 hover:text-[#A6FF5D] transition-colors duration-300">Features</Link>
+                    <Link to="/templates" onClick={() => setMobileOpen(false)} className="text-white/70 hover:text-[#A6FF5D] transition-colors duration-300">Templates</Link>
                     <Link to="/contact" onClick={() => setMobileOpen(false)} className="text-white/70 hover:text-[#A6FF5D] transition-colors duration-300">Contact</Link>
 
                     {/* Login / Logout - conditional */}

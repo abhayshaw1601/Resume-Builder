@@ -33,20 +33,35 @@ const Dashboard = () => {
     fetchResumes()
   }, [])
 
+  const [isCreating, setIsCreating] = useState(false)
+
   const handleCreateConfirm = async () => {
-    if (!newResumeName.trim()) return;
+    if (!newResumeName.trim() || isCreating) return;
+
+    if (allresume.some(r => r.title.toLowerCase() === newResumeName.trim().toLowerCase())) {
+        alert("A resume with this title already exists. Please choose a different name.");
+        return;
+    }
+
     try {
+      setIsCreating(true)
       const { data } = await API.post('/resumes', { title: newResumeName.trim() })
       setShowCreateModal(false)
       setNewResumeName('')
       navigate(`/app/builder/${data._id}`)
     } catch (error) {
       console.error('Create resume error:', error.message)
+      setIsCreating(false)
     }
   }
 
   const handleUploadConfirm = async () => {
-    if (!selectedFile || !uploadResumeName.trim()) return;
+    if (!selectedFile || !uploadResumeName.trim() || isExtracting) return;
+
+    if (allresume.some(r => r.title.toLowerCase() === uploadResumeName.trim().toLowerCase())) {
+        alert("A resume with this title already exists. Please choose a different name.");
+        return;
+    }
 
     try {
       setIsExtracting(true)
@@ -69,23 +84,40 @@ const Dashboard = () => {
     } catch (error) {
       console.error('Upload error:', error.response?.data?.message || error.message);
       alert(error.response?.data?.message || 'Failed to extract resume data. Please try again.');
-    } finally {
       setIsExtracting(false);
     }
   }
 
+  const [deletingIds, setDeletingIds] = useState([])
+
   const handleDelete = async (id) => {
+    // Immediate UI feedback
+    setDeletingIds(prev => [...prev, id])
+    setDeleteId(null)
+      
+    // Trigger unmount slightly after particle explosion (400ms)
+    setTimeout(() => {
+        setallresume(prev => prev.filter(r => r._id !== id))
+        setDeletingIds(prev => prev.filter(dId => dId !== id))
+    }, 400)
+
     try {
+      // Fire HTTP request asynchronously without blocking UI timing
       await API.delete(`/resumes/${id}`)
-      setallresume(prev => prev.filter(r => r._id !== id))
-      setDeleteId(null)
     } catch (error) {
       console.error('Delete resume error:', error.message)
+      // Note: A robust system might rollback allresume here on failure
     }
   }
 
   return (
     <div className="w-full text-white relative">
+      <style>{`
+        @keyframes particle-explode {
+          0% { transform: translate(0, 0) scale(1); opacity: 1; }
+          100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+      `}</style>
       {/* Ambient Glow */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#A6FF5D]/5 blur-[120px] rounded-full pointer-events-none -z-10" />
 
@@ -150,65 +182,85 @@ const Dashboard = () => {
 
         {/* Existing Resumes */}
         {!loading && allresume.map((resume) => (
-          <div 
-            key={resume._id} 
-            onClick={() => navigate(`/app/preview/${resume._id}`)}
-            className="bg-white/[0.03] border border-white/[0.06] hover:border-[#A6FF5D]/30 rounded-2xl h-[400px] flex flex-col overflow-hidden transition-all duration-300 group relative cursor-pointer"
-          >
+          <div key={resume._id} className="relative w-full h-[400px]">
+            {/* Particle Explosion Layer */}
+            {deletingIds.includes(resume._id) && (
+                <div className="absolute inset-0 pointer-events-none z-50 flex items-center justify-center">
+                    {Array.from({ length: 15 }).map((_, i) => (
+                        <div 
+                            key={i} 
+                            className="absolute w-2 h-2 rounded-full bg-red-500 opacity-0"
+                            style={{
+                                animation: `particle-explode 0.4s ease-out forwards`,
+                                '--tx': `${(Math.random() - 0.5) * 300}px`,
+                                '--ty': `${(Math.random() - 0.5) * 300}px`,
+                            }}
+                        />
+                    ))}
+                </div>
+            )}
 
-            {/* Thumbnail placeholder */}
-            <div className="flex-1 bg-white/5 border-b border-white/[0.06] p-4 relative overflow-hidden group-hover:opacity-80 transition-opacity">
-              <div className="w-full h-full bg-black/40 rounded-lg shadow-inner flex flex-col p-4 gap-2 border border-white/5 relative">
-                <div className="w-1/2 h-3 rounded mb-2" style={{ backgroundColor: resume.accent_color || '#A6FF5D', opacity: 0.8 }}></div>
-                <div className="w-full h-1 bg-gray-700 mt-2 rounded"></div>
-                <div className="w-4/5 h-1 bg-gray-700 rounded"></div>
-                <div className="w-3/4 h-1 bg-gray-700 rounded"></div>
-                <div className="w-full flex gap-2 mt-4">
-                  <div className="w-1/3 h-16 bg-white/5 rounded"></div>
-                  <div className="w-2/3 h-16 bg-white/5 rounded flex-col flex gap-1.5 p-1.5">
-                    <div className="w-full h-1 bg-gray-600 rounded"></div>
-                    <div className="w-full h-1 bg-gray-600 rounded"></div>
-                    <div className="w-2/3 h-1 bg-gray-600 rounded"></div>
+            <div 
+              onClick={() => navigate(`/app/preview/${resume._id}`)}
+              className={`w-full h-full bg-white/[0.03] border border-white/[0.06] hover:border-[#A6FF5D]/30 rounded-2xl flex flex-col overflow-hidden transition-all duration-300 group relative cursor-pointer ${
+                  deletingIds.includes(resume._id) ? 'opacity-0 scale-50 pointer-events-none' : 'opacity-100 scale-100'
+              }`}
+            >
+
+              {/* Thumbnail placeholder */}
+              <div className="flex-1 bg-white/5 border-b border-white/[0.06] p-4 relative overflow-hidden group-hover:opacity-80 transition-opacity">
+                <div className="w-full h-full bg-black/40 rounded-lg shadow-inner flex flex-col p-4 gap-2 border border-white/5 relative">
+                  <div className="w-1/2 h-3 rounded mb-2" style={{ backgroundColor: resume.accent_color || '#A6FF5D', opacity: 0.8 }}></div>
+                  <div className="w-full h-1 bg-gray-700 mt-2 rounded"></div>
+                  <div className="w-4/5 h-1 bg-gray-700 rounded"></div>
+                  <div className="w-3/4 h-1 bg-gray-700 rounded"></div>
+                  <div className="w-full flex gap-2 mt-4">
+                    <div className="w-1/3 h-16 bg-white/5 rounded"></div>
+                    <div className="w-2/3 h-16 bg-white/5 rounded flex-col flex gap-1.5 p-1.5">
+                      <div className="w-full h-1 bg-gray-600 rounded"></div>
+                      <div className="w-full h-1 bg-gray-600 rounded"></div>
+                      <div className="w-2/3 h-1 bg-gray-600 rounded"></div>
+                    </div>
                   </div>
+                </div>
+
+                {/* Hover Overlay Actions */}
+                <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/app/builder/${resume._id}`);
+                    }}
+                    className="w-12 h-12 rounded-full bg-[#A6FF5D] shadow-[0_0_20px_rgba(166,255,93,0.3)] text-black flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
+                    title="Edit resume"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                  </button>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteId(resume._id);
+                    }}
+                    className="w-12 h-12 rounded-full bg-red-500/20 hover:bg-red-500/80 text-red-400 hover:text-white flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
+                    title="Delete resume"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+                  </button>
                 </div>
               </div>
 
-              {/* Hover Overlay Actions */}
-              <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/app/builder/${resume._id}`);
-                  }}
-                  className="w-12 h-12 rounded-full bg-[#A6FF5D] shadow-[0_0_20px_rgba(166,255,93,0.3)] text-black flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
-                  title="Edit resume"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                </button>
-                <button 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDeleteId(resume._id);
-                  }}
-                  className="w-12 h-12 rounded-full bg-red-500/20 hover:bg-red-500/80 text-red-400 hover:text-white flex items-center justify-center hover:scale-110 transition-all cursor-pointer"
-                  title="Delete resume"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                </button>
+              {/* Meta info */}
+              <div className="p-5 flex flex-col justify-end">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="font-semibold text-white truncate pr-2 text-sm" title={resume.title}>{resume.title}</h3>
+                  <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-white/10 px-2 py-0.5 rounded-full shrink-0">
+                    {resume.template || 'classic'}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500">Updated {new Date(resume.updatedAt).toLocaleDateString()}</p>
               </div>
-            </div>
 
-            {/* Meta info */}
-            <div className="p-5 flex flex-col justify-end">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-semibold text-white truncate pr-2 text-sm" title={resume.title}>{resume.title}</h3>
-                <span className="text-[10px] uppercase tracking-wider text-gray-500 border border-white/10 px-2 py-0.5 rounded-full shrink-0">
-                  {resume.template || 'classic'}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">Updated {new Date(resume.updatedAt).toLocaleDateString()}</p>
             </div>
-
           </div>
         ))}
 
@@ -300,9 +352,9 @@ const Dashboard = () => {
               <button
                 onClick={handleCreateConfirm}
                 className="bg-[#A6FF5D] hover:bg-[#A6FF5D]/90 text-black px-6 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 cursor-pointer disabled:opacity-50"
-                disabled={!newResumeName.trim()}
+                disabled={!newResumeName.trim() || isCreating}
               >
-                Create
+                {isCreating ? 'Creating...' : 'Create'}
               </button>
             </div>
           </div>
@@ -369,6 +421,9 @@ const Dashboard = () => {
                             id="uploadResumeName"
                             value={uploadResumeName}
                             onChange={(e) => setUploadResumeName(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleUploadConfirm()
+                            }}
                             required
                             placeholder=" "
                             autoFocus
@@ -431,7 +486,7 @@ const Dashboard = () => {
       
       {/* Extraction Loading Overlay */}
       {isExtracting && (
-          <div className="fixed inset-0 z-200 flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl">
+          <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/95 backdrop-blur-xl">
               <div className="relative mb-8">
                   <div className="w-24 h-24 rounded-full border-4 border-[#A6FF5D]/10 border-t-[#A6FF5D] animate-spin" />
                   <div className="absolute inset-0 flex items-center justify-center">

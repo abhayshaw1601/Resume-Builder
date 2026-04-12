@@ -36,7 +36,7 @@ const Footer = () => {
                         <h3 className="text-white font-semibold mb-4">Product</h3>
                         <ul className="flex flex-col gap-3">
                             <li><Link to="/feature" className="text-gray-400 hover:text-[#A6FF5D] text-sm transition-colors duration-300">Features</Link></li>
-                            <li><a href="#" className="text-gray-400 hover:text-[#A6FF5D] text-sm transition-colors duration-300">Templates</a></li>
+                            <li><Link to="/templates" className="text-gray-400 hover:text-[#A6FF5D] text-sm transition-colors duration-300">Templates</Link></li>
                             <li><a href="#" className="text-gray-400 hover:text-[#A6FF5D] text-sm transition-colors duration-300">Pricing</a></li>
                             <li><a href="#" className="text-gray-400 hover:text-[#A6FF5D] text-sm transition-colors duration-300">Examples</a></li>
                         </ul>

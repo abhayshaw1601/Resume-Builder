@@ -12,6 +12,7 @@ import Feature from './pages/Feature'
 import PublicLayout from './components/PublicLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import ManagementPreview from './pages/ManagementPreview'
+import Templates from './pages/Templates'
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/feature" element={<Feature />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/templates" element={<Templates />} />
           <Route path="/view/:resumeId" element={<Preview />} />
         </Route>
 

@@ -13,10 +13,10 @@ const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
     return (
         <div className="w-full min-h-full flex" style={{ fontSize: fontSize || 15 }}>
             {/* Left Panel */}
-            <aside className="w-[36%] text-white p-7 flex flex-col gap-6 shrink-0" style={{ background: accentBg || accentColor }}>
+            <aside className={`w-[36%] ${isDarkMode ? 'text-black' : 'text-gray-900'} p-7 flex flex-col gap-6 shrink-0`} style={{ background: accentBg || accentColor }}>
                 {/* Photo */}
                 {data.personal_info?.photo && (
-                    <div className={`w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-white/20 shadow-lg ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10`}>
+                    <div className={`w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-black/20 shadow-lg ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10`}>
                         <img src={data.personal_info.photo} alt="Profile" className="w-full h-full object-cover"
                             style={{
                                 transform: `scale(${data.personal_info.photo_settings?.scale || 1}) translate(${data.personal_info.photo_settings?.offsetX || 0}px, ${data.personal_info.photo_settings?.offsetY || 0}px)`,
@@ -29,21 +29,21 @@ const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                 <div className="text-center">
                     <h1 className="font-bold tracking-wide leading-tight" style={{ fontSize: headingSize || 22 }}>{data.personal_info?.full_name || "Your Name"}</h1>
                     {data.experience?.[0]?.position && (
-                        <p className="text-[0.75em] mt-1 uppercase tracking-widest text-white/70">{data.experience[0].position}</p>
+                        <p className="text-[0.75em] mt-1 uppercase tracking-widest opacity-70">{data.experience[0].position}</p>
                     )}
                 </div>
 
                 {/* Summary */}
                 {data.professional_summary && (
-                    <p className="text-[0.75em] leading-relaxed text-white/80 text-center italic">
+                    <p className="text-[0.75em] leading-relaxed opacity-80 text-center italic">
                         "{data.professional_summary}"
                     </p>
                 )}
 
                 {/* Contact */}
                 <div>
-                    <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Contact</h2>
-                    <ul className="space-y-2 text-[0.75em] text-white/90">
+                    <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Contact</h2>
+                    <ul className="space-y-2 text-[0.75em] opacity-90">
                         {data.personal_info?.email && (
                             <li className="flex items-center gap-2"><Mail size={12} className="opacity-60 shrink-0" />{data.personal_info.email}</li>
                         )}
@@ -65,14 +65,14 @@ const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                 {/* Education */}
                 {data.education?.length > 0 && (
                     <div>
-                        <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Education</h2>
+                        <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Education</h2>
                         <div className="space-y-3">
                             {data.education.map((edu, i) => (
                                 <div key={i}>
                                     <p className="font-semibold text-[0.75em]">{edu.degree}</p>
-                                    <p className="text-[0.6875em] text-white/70">{edu.institution}</p>
-                                    <p className="text-[0.625em] text-white/50">{formatDate(edu.graduation_date)}</p>
-                                    {edu.gpa && <p className="text-[0.625em] text-white/50">GPA: {edu.gpa}</p>}
+                                    <p className="text-[0.6875em] opacity-70">{edu.institution}</p>
+                                    <p className="text-[0.625em] opacity-50">{formatDate(edu.graduation_date)}</p>
+                                    {edu.gpa && <p className="text-[0.625em] opacity-50">GPA: {edu.gpa}</p>}
                                 </div>
                             ))}
                         </div>
@@ -82,10 +82,10 @@ const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                 {/* Skills */}
                 {data.skills?.length > 0 && (
                     <div>
-                        <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Skills</h2>
+                        <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-1.5 mb-3" style={{ fontSize: headingSize ? headingSize * 0.45 : 10 }}>Skills</h2>
                         <div className="flex flex-wrap gap-1.5">
                             {data.skills.map((skill, i) => (
-                                <span key={i} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/15 border border-white/10 px-2 py-0.5 rounded text-[0.6875em]`}>{skill}</span>
+                                <span key={i} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/15 border border-black/10 px-2 py-0.5 rounded text-[0.6875em]`}>{skill}</span>
                             ))}
                         </div>
                     </div>

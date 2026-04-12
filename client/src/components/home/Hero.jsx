@@ -70,9 +70,12 @@ const Hero = () => {
                         </div>
                     </Link>
                     <div className="bg-white/15 hover:bg-white/10 p-px flex items-center justify-center rounded-full hover:scale-105 transition duration-300 active:scale-100">
-                        <button className="px-6 text-sm py-3 text-white rounded-full bg-white/5 cursor-pointer">
+                        <Link 
+                            to="/templates"
+                            className="px-6 text-sm py-3 text-white rounded-full bg-white/5 cursor-pointer"
+                        >
                             View Templates
-                        </button>
+                        </Link>
                     </div>
                 </div>
 

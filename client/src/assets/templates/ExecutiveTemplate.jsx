@@ -19,10 +19,10 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
     return (
         <div className={`w-full min-h-full ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} leading-relaxed flex flex-row shadow-2xl`} style={{ fontSize: fontSize || 16 }}>
             {/* Left Sidebar */}
-            <aside className="w-[30%] min-h-full p-6 text-white flex flex-col gap-8 shrink-0" style={{ background: accentBg || accentColor || '#1e293b' }}>
+            <aside className={`w-[30%] min-h-full p-6 ${isDarkMode ? 'text-black' : 'text-gray-900'} flex flex-col gap-8 shrink-0`} style={{ background: accentBg || accentColor || '#1e293b' }}>
                 
                 {data.personal_info?.photo && (
-                    <div className={`w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-white/20 shadow-lg shrink-0 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
+                    <div className={`w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-black/20 shadow-lg shrink-0 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}`}>
                         <img 
                             src={data.personal_info.photo} 
                             alt="Profile" 
@@ -36,8 +36,8 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                 )}
 
                 <div>
-                    <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
-                    <ul className="flex flex-col gap-3 text-[0.875em] text-white/90 break-words">
+                    <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
+                    <ul className="flex flex-col gap-3 text-[0.875em] opacity-90 break-words">
                         {data.personal_info?.email && (
                             <li className="flex items-start gap-2"><Mail className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.email}</span></li>
                         )}
@@ -58,13 +58,13 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
 
                 {data.education && data.education.length > 0 && (
                     <div>
-                        <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Education</h2>
+                        <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Education</h2>
                         <div className="flex flex-col gap-4">
                             {data.education.map((edu, idx) => (
                                 <div key={idx} className="flex flex-col gap-1">
-                                    <h3 className="font-semibold text-white leading-tight">{edu.degree}</h3>
-                                    <span className="text-[0.75em] text-white/70 italic">{edu.institution}</span>
-                                    <span className={`text-[0.75em] font-bold ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10 w-fit px-2 py-0.5 rounded text-white/90 mt-1`}>{formatDate(edu.graduation_date)}</span>
+                                    <h3 className="font-semibold leading-tight">{edu.degree}</h3>
+                                    <span className="text-[0.75em] opacity-70 italic">{edu.institution}</span>
+                                    <span className={`text-[0.75em] font-bold ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10 w-fit px-2 py-0.5 rounded opacity-90 mt-1`}>{formatDate(edu.graduation_date)}</span>
                                 </div>
                             ))}
                         </div>
@@ -73,10 +73,10 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
 
                 {data.skills && data.skills.length > 0 && (
                     <div>
-                        <h2 className="font-bold uppercase tracking-widest border-b border-white/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Core Skills</h2>
+                        <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Core Skills</h2>
                         <div className="flex flex-wrap gap-2">
                             {data.skills.map((skill, idx) => (
-                                <span key={idx} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10 border border-white/10 px-2.5 py-1 rounded text-[0.75em] font-medium text-white/90 shadow-sm`}>
+                                <span key={idx} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10 border border-black/10 px-2.5 py-1 rounded text-[0.75em] font-medium opacity-90 shadow-sm`}>
                                     {skill}
                                 </span>
                             ))}
