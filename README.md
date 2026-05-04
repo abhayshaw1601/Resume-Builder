@@ -1,4 +1,4 @@
-# Nexus Resume Builder
+# Resume Builder
 
 A professional, AI-powered resume building platform that allows users to create, manage, and analyze resumes with high-fidelity previews and intelligent feedback.
 
@@ -69,6 +69,11 @@ sequenceDiagram
 ## Technology Stack
 
 ### Frontend
+![React](https://img.shields.io/badge/React-19.0-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=flat-square&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-4.0-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-7.0-CA4245?style=flat-square&logo=react-router&logoColor=white)
+
 - React 19 (Vite)
 - Tailwind CSS 4
 - React Router 7
@@ -76,6 +81,11 @@ sequenceDiagram
 - Lucide React Icons
 
 ### Backend
+![NodeJS](https://img.shields.io/badge/Node.js-20.0-339933?style=flat-square&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/Express.js-4.21-000000?style=flat-square&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white)
+![Gemini](https://img.shields.io/badge/Google_Gemini-Pro-8E75B2?style=flat-square&logo=google-gemini&logoColor=white)
+
 - Node.js & Express
 - MongoDB & Mongoose
 - Google Generative AI (Gemini API)
