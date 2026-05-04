@@ -25,16 +25,16 @@ const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, hea
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[0.875em] ">
 					{data.personal_info?.email && (
-						<div className="flex items-center gap-2">
+						<a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-2 hover:underline">
 							<Mail className="size-4" />
 							<span>{data.personal_info.email}</span>
-						</div>
+						</a>
 					)}
 					{data.personal_info?.phone && (
-						<div className="flex items-center gap-2">
+						<a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-2 hover:underline">
 							<Phone className="size-4" />
 							<span>{data.personal_info.phone}</span>
-						</div>
+						</a>
 					)}
 					{data.personal_info?.location && (
 						<div className="flex items-center gap-2">
@@ -43,15 +43,21 @@ const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, hea
 						</div>
 					)}
 					{data.personal_info?.linkedin && (
-						<a target="_blank" href={data.personal_info?.linkedin} className="flex items-center gap-2">
+						<a target="_blank" rel="noopener noreferrer" href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} className="flex items-center gap-2 hover:underline">
 							<Link className="size-4" />
-							<span className="break-all text-[0.75em]">{data.personal_info.linkedin.split("https://www.")[1] ? data.personal_info.linkedin.split("https://www.")[1] : data.personal_info.linkedin}</span>
+							<span className="break-all text-[0.75em]">{data.personal_info.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>
+						</a>
+					)}
+					{data.personal_info?.github && (
+						<a target="_blank" rel="noopener noreferrer" href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} className="flex items-center gap-2 hover:underline">
+							<Link className="size-4" />
+							<span className="break-all text-[0.75em]">{data.personal_info.github.replace(/^https?:\/\/(www\.)?/, '')}</span>
 						</a>
 					)}
 					{data.personal_info?.website && (
-						<a target="_blank" href={data.personal_info?.website} className="flex items-center gap-2">
+						<a target="_blank" rel="noopener noreferrer" href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} className="flex items-center gap-2 hover:underline">
 							<Globe className="size-4" />
-							<span className="break-all text-[0.75em]">{data.personal_info.website.split("https://")[1] ? data.personal_info.website.split("https://")[1] : data.personal_info.website}</span>
+							<span className="break-all text-[0.75em]">{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</span>
 						</a>
 					)}
 				</div>

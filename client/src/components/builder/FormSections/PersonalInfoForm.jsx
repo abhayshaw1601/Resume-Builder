@@ -75,6 +75,20 @@ const PersonalInfoForm = ({ data, onChange }) => {
 
         <div className="relative group flex-1">
             <input 
+                name="github" 
+                id="github" 
+                value={data?.github || ''} 
+                onChange={onChange} 
+                placeholder=" "
+                className="block w-full px-4 pt-5 pb-2 text-sm text-white bg-white/5 border border-white/10 rounded-xl appearance-none focus:outline-none focus:border-[#A6FF5D]/50 focus:bg-white/[0.07] transition-all duration-300 peer"
+            />
+            <label htmlFor="github" className="absolute text-sm text-gray-400 duration-300 transform -translate-y-3 scale-75 top-3.5 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 peer-focus:text-[#A6FF5D] cursor-text">
+                GitHub Profile URL
+            </label>
+        </div>
+
+        <div className="relative group flex-1">
+            <input 
                 name="portfolio" 
                 id="portfolio" 
                 value={data?.portfolio || ''} 

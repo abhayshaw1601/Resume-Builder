@@ -39,19 +39,37 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                     <h2 className="font-bold uppercase tracking-widest border-b border-black/20 pb-2 mb-4" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
                     <ul className="flex flex-col gap-3 text-[0.875em] opacity-90 break-words">
                         {data.personal_info?.email && (
-                            <li className="flex items-start gap-2"><Mail className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.email}</span></li>
+                            <li className="flex items-start gap-2">
+                                <Mail className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={`mailto:${data.personal_info.email}`} className="hover:underline truncate">{data.personal_info.email}</a>
+                            </li>
                         )}
                         {data.personal_info?.phone && (
-                            <li className="flex items-start gap-2"><Phone className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.phone}</span></li>
+                            <li className="flex items-start gap-2">
+                                <Phone className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="hover:underline">{data.personal_info.phone}</a>
+                            </li>
                         )}
                         {data.personal_info?.location && (
                             <li className="flex items-start gap-2"><MapPin className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.location}</span></li>
                         )}
                         {data.personal_info?.linkedin && (
-                            <li className="flex items-start gap-2"><Link className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.linkedin}</span></li>
+                            <li className="flex items-start gap-2">
+                                <Link className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline">LinkedIn</a>
+                            </li>
+                        )}
+                        {data.personal_info?.github && (
+                            <li className="flex items-start gap-2">
+                                <Link className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline">GitHub</a>
+                            </li>
                         )}
                         {data.personal_info?.website && (
-                            <li className="flex items-start gap-2"><Globe className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.website}</span></li>
+                            <li className="flex items-start gap-2">
+                                <Globe className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline">Portfolio</a>
+                            </li>
                         )}
                     </ul>
                 </div>

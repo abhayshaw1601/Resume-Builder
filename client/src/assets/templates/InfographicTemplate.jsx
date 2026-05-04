@@ -27,14 +27,14 @@ const InfographicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                 {/* Contact Pills */}
                 <div className="flex flex-wrap justify-center gap-2 mt-3">
                     {data.personal_info?.email && (
-                        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em]" style={{ backgroundColor: `${accentColor}12`, color: accentColor }}>
+                        <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] hover:scale-105 transition-transform" style={{ backgroundColor: `${accentColor}12`, color: accentColor }}>
                             <Mail size={11} />{data.personal_info.email}
-                        </span>
+                        </a>
                     )}
                     {data.personal_info?.phone && (
-                        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-emerald-50 text-emerald-700">
+                        <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-emerald-50 text-emerald-700 hover:scale-105 transition-transform">
                             <Phone size={11} />{data.personal_info.phone}
-                        </span>
+                        </a>
                     )}
                     {data.personal_info?.location && (
                         <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-amber-50 text-amber-700">
@@ -42,14 +42,19 @@ const InfographicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                         </span>
                     )}
                     {data.personal_info?.linkedin && (
-                        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-blue-50 text-blue-700">
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-blue-50 text-blue-700 hover:scale-105 transition-transform">
                             <Link size={11} />LinkedIn
-                        </span>
+                        </a>
+                    )}
+                    {data.personal_info?.github && (
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-gray-100 text-gray-700 hover:scale-105 transition-transform">
+                            <Link size={11} />GitHub
+                        </a>
                     )}
                     {data.personal_info?.website && (
-                        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-purple-50 text-purple-700">
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-purple-50 text-purple-700 hover:scale-105 transition-transform">
                             <Globe size={11} />Portfolio
-                        </span>
+                        </a>
                     )}
                 </div>
 

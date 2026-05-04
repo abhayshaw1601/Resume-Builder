@@ -25,25 +25,22 @@ const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                 </h1>
                 <div className={`flex justify-center flex-wrap gap-x-4 gap-y-1 text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mt-3`} style={{ fontFamily: "system-ui, sans-serif" }}>
                     {data.personal_info?.email && (
-                        <span className="flex items-center gap-1"><Mail size={11} />{data.personal_info.email}</span>
+                        <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-1 hover:underline"><Mail size={11} />{data.personal_info.email}</a>
                     )}
                     {data.personal_info?.phone && (
-                        <span>•</span>
-                    )}
-                    {data.personal_info?.phone && (
-                        <span className="flex items-center gap-1"><Phone size={11} />{data.personal_info.phone}</span>
-                    )}
-                    {data.personal_info?.location && (
-                        <span>•</span>
+                        <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline"><Phone size={11} />{data.personal_info.phone}</a>
                     )}
                     {data.personal_info?.location && (
                         <span className="flex items-center gap-1"><MapPin size={11} />{data.personal_info.location}</span>
                     )}
                     {data.personal_info?.linkedin && (
-                        <span className="flex items-center gap-1"><Link size={11} /><span className="break-all">{data.personal_info.linkedin}</span></span>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={11} />LinkedIn</a>
+                    )}
+                    {data.personal_info?.github && (
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={11} />GitHub</a>
                     )}
                     {data.personal_info?.website && (
-                        <span className="flex items-center gap-1"><Globe size={11} /><span className="break-all">{data.personal_info.website}</span></span>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Globe size={11} />Portfolio</a>
                     )}
                 </div>
             </header>

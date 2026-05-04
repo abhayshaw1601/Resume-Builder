@@ -23,14 +23,20 @@ const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize,
                 </h1>
 
                 <div className={`flex flex-wrap gap-6 text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {data.personal_info?.email && <span>{data.personal_info.email}</span>}
-                    {data.personal_info?.phone && <span>{data.personal_info.phone}</span>}
+                    {data.personal_info?.email && <a href={`mailto:${data.personal_info.email}`} className="hover:underline">{data.personal_info.email}</a>}
+                    {data.personal_info?.phone && <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="hover:underline">{data.personal_info.phone}</a>}
                     {data.personal_info?.location && <span>{data.personal_info.location}</span>}
                     {data.personal_info?.linkedin && (
-                        <span className="break-all">{data.personal_info.linkedin}</span>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">LinkedIn</a>
+                    )}
+                    {data.personal_info?.github && (
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Link className="size-4" />
+                            <span>GitHub</span>
+                        </a>
                     )}
                     {data.personal_info?.website && (
-                        <span className="break-all">{data.personal_info.website}</span>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">Portfolio</a>
                     )}
                 </div>
             </header>

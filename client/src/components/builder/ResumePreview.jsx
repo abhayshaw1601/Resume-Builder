@@ -26,6 +26,7 @@ const ResumePreview = ({ resumeData }) => {
       phone: resumeData.personal_info?.phone || '',
       location: resumeData.personal_info?.address || '',
       linkedin: resumeData.personal_info?.linkedin || '',
+      github: resumeData.personal_info?.github || '',
       website: resumeData.personal_info?.portfolio || '',
       photo: resumeData.personal_info?.photo || null,
       photo_settings: resumeData.personal_info?.photo_settings || null

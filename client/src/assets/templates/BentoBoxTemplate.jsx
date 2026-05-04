@@ -44,19 +44,37 @@ const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                             <h2 className="font-bold uppercase tracking-widest mb-3 opacity-80" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>
                             <ul className="space-y-2 text-[0.75em]">
                                 {data.personal_info?.email && (
-                                    <li className="flex items-center gap-2"><Mail size={11} className="opacity-70" />{data.personal_info.email}</li>
+                                    <li className="flex items-center gap-2">
+                                        <Mail size={11} className="opacity-70" />
+                                        <a href={`mailto:${data.personal_info.email}`} className="hover:underline truncate">{data.personal_info.email}</a>
+                                    </li>
                                 )}
                                 {data.personal_info?.phone && (
-                                    <li className="flex items-center gap-2"><Phone size={11} className="opacity-70" />{data.personal_info.phone}</li>
+                                    <li className="flex items-center gap-2">
+                                        <Phone size={11} className="opacity-70" />
+                                        <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="hover:underline">{data.personal_info.phone}</a>
+                                    </li>
                                 )}
                                 {data.personal_info?.location && (
                                     <li className="flex items-center gap-2"><MapPin size={11} className="opacity-70" />{data.personal_info.location}</li>
                                 )}
                                 {data.personal_info?.linkedin && (
-                                    <li className="flex items-start gap-2"><Link size={11} className="opacity-70 mt-0.5 shrink-0" /><span className="break-all">{data.personal_info.linkedin}</span></li>
+                                    <li className="flex items-start gap-2">
+                                        <Link size={11} className="opacity-70 mt-0.5 shrink-0" />
+                                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline">LinkedIn</a>
+                                    </li>
+                                )}
+                                {data.personal_info?.github && (
+                                    <li className="flex items-start gap-2">
+                                        <Link size={11} className="opacity-70 mt-0.5 shrink-0" />
+                                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline">GitHub</a>
+                                    </li>
                                 )}
                                 {data.personal_info?.website && (
-                                    <li className="flex items-start gap-2"><Globe size={11} className="opacity-70 mt-0.5 shrink-0" /><span className="break-all">{data.personal_info.website}</span></li>
+                                    <li className="flex items-start gap-2">
+                                        <Globe size={11} className="opacity-70 mt-0.5 shrink-0" />
+                                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline">Portfolio</a>
+                                    </li>
                                 )}
                             </ul>
                         </div>

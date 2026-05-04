@@ -17,21 +17,24 @@ const TimelineTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                 <h1 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} mb-1`} style={{ fontSize: headingSize || 24 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
-                <div className={`flex flex-wrap justify-center gap-4 text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 mt-3`}>
+                <div className={`flex flex-wrap justify-center gap-4 text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mt-3`}>
                     {data.personal_info?.email && (
-                        <span className="flex items-center gap-1"><Mail size={12} style={{ color: accentColor }} />{data.personal_info.email}</span>
+                        <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-1 hover:underline"><Mail size={12} style={{ color: accentColor }} />{data.personal_info.email}</a>
                     )}
                     {data.personal_info?.phone && (
-                        <span className="flex items-center gap-1"><Phone size={12} style={{ color: accentColor }} />{data.personal_info.phone}</span>
+                        <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline"><Phone size={12} style={{ color: accentColor }} />{data.personal_info.phone}</a>
                     )}
                     {data.personal_info?.location && (
                         <span className="flex items-center gap-1"><MapPin size={12} style={{ color: accentColor }} />{data.personal_info.location}</span>
                     )}
                     {data.personal_info?.linkedin && (
-                        <span className="flex items-center gap-1"><Link size={12} style={{ color: accentColor }} /><span className="break-all">{data.personal_info.linkedin}</span></span>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={12} style={{ color: accentColor }} />LinkedIn</a>
+                    )}
+                    {data.personal_info?.github && (
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={12} style={{ color: accentColor }} />GitHub</a>
                     )}
                     {data.personal_info?.website && (
-                        <span className="flex items-center gap-1"><Globe size={12} style={{ color: accentColor }} /><span className="break-all">{data.personal_info.website}</span></span>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Globe size={12} style={{ color: accentColor }} />Portfolio</a>
                     )}
                 </div>
                 {data.professional_summary && (

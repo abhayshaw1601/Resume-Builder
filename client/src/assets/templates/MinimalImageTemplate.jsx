@@ -1,4 +1,4 @@
-import { Mail, Phone, MapPin } from "lucide-react";
+import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
 
 const MinimalImageTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -55,22 +55,40 @@ const MinimalImageTemplate = ({ isDarkMode, data, accentColor, fontSize, heading
                         </h2>
                         <div className="space-y-2 text-[0.875em]">
                             {data.personal_info?.phone && (
-                                <div className="flex items-center gap-2">
+                                <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-2 hover:underline">
                                     <Phone size={14} style={{ color: accentColor }} />
                                     <span>{data.personal_info.phone}</span>
-                                </div>
+                                </a>
                             )}
                             {data.personal_info?.email && (
-                                <div className="flex items-center gap-2">
+                                <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-2 hover:underline">
                                     <Mail size={14} style={{ color: accentColor }} />
-                                    <span>{data.personal_info.email}</span>
-                                </div>
+                                    <span className="truncate">{data.personal_info.email}</span>
+                                </a>
                             )}
                             {data.personal_info?.location && (
                                 <div className="flex items-center gap-2">
                                     <MapPin size={14} style={{ color: accentColor }} />
                                     <span>{data.personal_info.location}</span>
                                 </div>
+                            )}
+                            {data.personal_info?.linkedin && (
+                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+                                    <Link size={14} style={{ color: accentColor }} />
+                                    <span>LinkedIn</span>
+                                </a>
+                            )}
+                            {data.personal_info?.github && (
+                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+                                    <Link size={14} style={{ color: accentColor }} />
+                                    <span>GitHub</span>
+                                </a>
+                            )}
+                            {data.personal_info?.website && (
+                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+                                    <Globe size={14} style={{ color: accentColor }} />
+                                    <span>Portfolio</span>
+                                </a>
                             )}
                         </div>
                     </section>

@@ -28,19 +28,31 @@ const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                     {/* Contact Row */}
                     <div className="flex flex-wrap justify-center gap-4 text-[0.75em] text-gray-400 mt-4">
                         {data.personal_info?.email && (
-                            <span className="flex items-center gap-1.5"><Mail size={11} style={{ color: accentColor }} />{data.personal_info.email}</span>
+                            <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-1.5 hover:text-white transition-colors"><Mail size={11} style={{ color: accentColor }} />{data.personal_info.email}</a>
                         )}
                         {data.personal_info?.phone && (
-                            <span className="flex items-center gap-1.5"><Phone size={11} style={{ color: accentColor }} />{data.personal_info.phone}</span>
+                            <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1.5 hover:text-white transition-colors"><Phone size={11} style={{ color: accentColor }} />{data.personal_info.phone}</a>
                         )}
                         {data.personal_info?.location && (
                             <span className="flex items-center gap-1.5"><MapPin size={11} style={{ color: accentColor }} />{data.personal_info.location}</span>
                         )}
                         {data.personal_info?.linkedin && (
-                            <span className="flex items-center gap-1.5"><Link size={11} style={{ color: accentColor }} /><span className="break-all">{data.personal_info.linkedin}</span></span>
+                            <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                <Link size={11} style={{ color: accentColor }} />
+                                <span>LinkedIn</span>
+                            </a>
+                        )}
+                        {data.personal_info?.github && (
+                            <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                <Link size={11} style={{ color: accentColor }} />
+                                <span>GitHub</span>
+                            </a>
                         )}
                         {data.personal_info?.website && (
-                            <span className="flex items-center gap-1.5"><Globe size={11} style={{ color: accentColor }} /><span className="break-all">{data.personal_info.website}</span></span>
+                            <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
+                                <Globe size={11} style={{ color: accentColor }} />
+                                <span>Portfolio</span>
+                            </a>
                         )}
                     </div>
                 </div>

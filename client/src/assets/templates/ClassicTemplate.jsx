@@ -25,16 +25,16 @@ const ClassicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, he
 
                 <div className={`flex flex-wrap justify-center gap-4 text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {data.personal_info?.email && (
-                        <div className="flex items-center gap-1">
+                        <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-1 hover:underline">
                             <Mail className="size-4" />
                             <span>{data.personal_info.email}</span>
-                        </div>
+                        </a>
                     )}
                     {data.personal_info?.phone && (
-                        <div className="flex items-center gap-1">
+                        <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline">
                             <Phone className="size-4" />
                             <span>{data.personal_info.phone}</span>
-                        </div>
+                        </a>
                     )}
                     {data.personal_info?.location && (
                         <div className="flex items-center gap-1">
@@ -43,16 +43,22 @@ const ClassicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, he
                         </div>
                     )}
                     {data.personal_info?.linkedin && (
-                        <div className="flex items-center gap-1">
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
                             <Link className="size-4" />
-                            <span className="break-all">{data.personal_info.linkedin}</span>
-                        </div>
+                            <span className="break-all">LinkedIn</span>
+                        </a>
+                    )}
+                    {data.personal_info?.github && (
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Link className="size-4" />
+                            <span className="break-all">GitHub</span>
+                        </a>
                     )}
                     {data.personal_info?.website && (
-                        <div className="flex items-center gap-1">
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
                             <Globe className="size-4" />
-                            <span className="break-all">{data.personal_info.website}</span>
-                        </div>
+                            <span className="break-all">Portfolio</span>
+                        </a>
                     )}
                 </div>
             </header>

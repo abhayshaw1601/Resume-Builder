@@ -38,19 +38,37 @@ const TerminalTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                     <div className="text-[#565f89]" style={{ fontSize: headingSize ? headingSize * 0.45 : 13 }}>$ cat ~/.contact</div>
                     <div className="pl-2 space-y-0.5 text-[0.875em] mt-1">
                         {data.personal_info?.email && (
-                            <div><span className="text-[#bb9af7]">email</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6]">{data.personal_info.email}</span></div>
+                            <div>
+                                <span className="text-[#bb9af7]">email</span><span className="text-[#89ddff]">=</span>
+                                <a href={`mailto:${data.personal_info.email}`} className="text-[#a9b1d6] hover:underline cursor-pointer">"{data.personal_info.email}"</a>
+                            </div>
                         )}
                         {data.personal_info?.phone && (
-                            <div><span className="text-[#bb9af7]">phone</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6]">{data.personal_info.phone}</span></div>
+                            <div>
+                                <span className="text-[#bb9af7]">phone</span><span className="text-[#89ddff]">=</span>
+                                <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="text-[#a9b1d6] hover:underline cursor-pointer">"{data.personal_info.phone}"</a>
+                            </div>
                         )}
                         {data.personal_info?.location && (
-                            <div><span className="text-[#bb9af7]">location</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6]">{data.personal_info.location}</span></div>
+                            <div><span className="text-[#bb9af7]">location</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6]">"{data.personal_info.location}"</span></div>
                         )}
                         {data.personal_info?.linkedin && (
-                            <div><span className="text-[#bb9af7]">linkedin</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6] break-all">{data.personal_info.linkedin}</span></div>
+                            <div>
+                                <span className="text-[#bb9af7]">linkedin</span><span className="text-[#89ddff]">=</span>
+                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.linkedin}"</a>
+                            </div>
+                        )}
+                        {data.personal_info?.github && (
+                            <div>
+                                <span className="text-[#bb9af7]">github</span><span className="text-[#89ddff]">=</span>
+                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.github}"</a>
+                            </div>
                         )}
                         {data.personal_info?.website && (
-                            <div><span className="text-[#bb9af7]">website</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6] break-all">{data.personal_info.website}</span></div>
+                            <div>
+                                <span className="text-[#bb9af7]">website</span><span className="text-[#89ddff]">=</span>
+                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.website}"</a>
+                            </div>
                         )}
                     </div>
                 </div>
