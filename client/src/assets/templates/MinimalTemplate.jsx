@@ -1,3 +1,6 @@
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -25,18 +28,30 @@ const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize,
                 <div className={`flex flex-wrap gap-6 text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {data.personal_info?.email && <a href={`mailto:${data.personal_info.email}`} className="hover:underline">{data.personal_info.email}</a>}
                     {data.personal_info?.phone && <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="hover:underline">{data.personal_info.phone}</a>}
-                    {data.personal_info?.location && <span>{data.personal_info.location}</span>}
+                    {data.personal_info?.location && (
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:underline"
+                        >
+                            {data.personal_info.location}
+                        </a>
+                    )}
                     {data.personal_info?.linkedin && (
-                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">LinkedIn</a>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Linkedin className="size-4" />
+                            <span>{cleanUsername(data.personal_info.linkedin, 'linkedin')}</span>
+                        </a>
                     )}
                     {data.personal_info?.github && (
                         <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
-                            <Link className="size-4" />
-                            <span>GitHub</span>
+                            <Github className="size-4" />
+                            <span>{cleanUsername(data.personal_info.github, 'github')}</span>
                         </a>
                     )}
                     {data.personal_info?.website && (
-                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">Portfolio</a>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</a>
                     )}
                 </div>
             </header>
@@ -62,7 +77,7 @@ const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize,
                             <div key={index}>
                                 <div className="flex justify-between items-baseline mb-1">
                                     <h3 className="text-lg font-medium">{exp.position}</h3>
-                                    <span className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>
+                                    <span className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                         {formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
@@ -111,9 +126,9 @@ const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize,
                                         {edu.degree} {edu.field && `in ${edu.field}`}
                                     </h3>
                                     <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{edu.institution}</p>
-                                    {edu.gpa && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
+                                    {edu.gpa && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GPA: {edu.gpa}</p>}
                                 </div>
-                                <span className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>
+                                <span className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
                                     {formatDate(edu.graduation_date)}
                                 </span>
                             </div>
@@ -139,3 +154,4 @@ const MinimalTemplate = ({ isDarkMode, data, accentColor, fontSize, headingSize,
 }
 
 export default MinimalTemplate;
+

@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const ClassicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -37,27 +39,32 @@ const ClassicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, he
                         </a>
                     )}
                     {data.personal_info?.location && (
-                        <div className="flex items-center gap-1">
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:underline"
+                        >
                             <MapPin className="size-4" />
                             <span>{data.personal_info.location}</span>
-                        </div>
+                        </a>
                     )}
                     {data.personal_info?.linkedin && (
                         <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
-                            <Link className="size-4" />
-                            <span className="break-all">LinkedIn</span>
+                            <Linkedin className="size-4" />
+                            <span className="break-all">{cleanUsername(data.personal_info.linkedin, 'linkedin')}</span>
                         </a>
                     )}
                     {data.personal_info?.github && (
                         <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
-                            <Link className="size-4" />
-                            <span className="break-all">GitHub</span>
+                            <Github className="size-4" />
+                            <span className="break-all">{cleanUsername(data.personal_info.github, 'github')}</span>
                         </a>
                     )}
                     {data.personal_info?.website && (
                         <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
                             <Globe className="size-4" />
-                            <span className="break-all">Portfolio</span>
+                            <span className="break-all">{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</span>
                         </a>
                     )}
                 </div>
@@ -180,3 +187,4 @@ const ClassicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, he
 }
 
 export default ClassicTemplate;
+

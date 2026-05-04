@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -34,24 +36,32 @@ const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                             <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1.5 hover:text-white transition-colors"><Phone size={11} style={{ color: accentColor }} />{data.personal_info.phone}</a>
                         )}
                         {data.personal_info?.location && (
-                            <span className="flex items-center gap-1.5"><MapPin size={11} style={{ color: accentColor }} />{data.personal_info.location}</span>
+                            <a 
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-center gap-1.5 hover:text-white transition-colors"
+                            >
+                                <MapPin size={11} style={{ color: accentColor }} />
+                                {data.personal_info.location}
+                            </a>
                         )}
                         {data.personal_info?.linkedin && (
                             <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
-                                <Link size={11} style={{ color: accentColor }} />
-                                <span>LinkedIn</span>
+                                <Linkedin size={11} style={{ color: accentColor }} />
+                                <span>{cleanUsername(data.personal_info.linkedin, 'linkedin')}</span>
                             </a>
                         )}
                         {data.personal_info?.github && (
                             <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
-                                <Link size={11} style={{ color: accentColor }} />
-                                <span>GitHub</span>
+                                <Github size={11} style={{ color: accentColor }} />
+                                <span>{cleanUsername(data.personal_info.github, 'github')}</span>
                             </a>
                         )}
                         {data.personal_info?.website && (
                             <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-white transition-colors">
                                 <Globe size={11} style={{ color: accentColor }} />
-                                <span>Portfolio</span>
+                                <span>{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</span>
                             </a>
                         )}
                     </div>
@@ -79,7 +89,7 @@ const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                                 <div key={i} className={`${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/5 rounded-xl p-5 border border-white/10`}>
                                     <div className="flex justify-between items-baseline">
                                         <h3 className="text-lg font-bold text-white">{exp.position}</h3>
-                                        <span className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4 font-mono`}>
+                                        <span className={`text-[0.6875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} whitespace-nowrap ml-4 font-mono`}>
                                             {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                         </span>
                                     </div>
@@ -117,7 +127,7 @@ const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                                         <h3 className="font-bold text-white text-[0.875em]">{p.name}</h3>
                                         {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                     </div>
-                                    {p.type && <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{p.type}</p>}
+                                    {p.type && <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{p.type}</p>}
                                     {p.description && <p className="text-[0.75em] text-gray-400 mt-1 line-clamp-2">{p.description}</p>}
                                 </div>
                             ))}
@@ -151,8 +161,8 @@ const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                                     <div key={i}>
                                         <p className="font-semibold text-white text-[0.875em]">{edu.degree} {edu.field && `— ${edu.field}`}</p>
                                         <p className="text-[0.75em]" style={{ color: accentColor }}>{edu.institution}</p>
-                                        <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{formatDate(edu.graduation_date)}</p>
-                                        {edu.gpa && <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
+                                        <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{formatDate(edu.graduation_date)}</p>
+                                        {edu.gpa && <p className={`text-[0.6875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GPA: {edu.gpa}</p>}
                                     </div>
                                 ))}
                             </div>
@@ -165,3 +175,4 @@ const PitchDeckTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
 };
 
 export default PitchDeckTemplate;
+

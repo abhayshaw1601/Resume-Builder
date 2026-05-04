@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -34,16 +36,29 @@ const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                         <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline"><Phone size={12} /> {data.personal_info.phone}</a>
                     )}
                     {data.personal_info?.location && (
-                        <span className="flex items-center gap-1"><MapPin size={12} /> {data.personal_info.location}</span>
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:underline"
+                        >
+                            <MapPin size={12} /> {data.personal_info.location}
+                        </a>
                     )}
                     {data.personal_info?.linkedin && (
-                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={12} /> LinkedIn</a>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Linkedin size={12} /> {cleanUsername(data.personal_info.linkedin, 'linkedin')}
+                        </a>
                     )}
                     {data.personal_info?.github && (
-                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={12} /> GitHub</a>
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Github size={12} /> {cleanUsername(data.personal_info.github, 'github')}
+                        </a>
                     )}
                     {data.personal_info?.website && (
-                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Globe size={12} /> Portfolio</a>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Globe size={12} /> {data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}
+                        </a>
                     )}
                 </div>
             </header>
@@ -65,7 +80,7 @@ const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                             <div key={i}>
                                 <div className="flex justify-between items-baseline">
                                     <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
-                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4`}>
+                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} whitespace-nowrap ml-4`}>
                                         {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
@@ -103,7 +118,7 @@ const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                                         <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.75em] hover:underline" style={{ color: accentColor }}>↗ Link</a>
                                     )}
                                 </div>
-                                {p.type && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{p.type}</p>}
+                                {p.type && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{p.type}</p>}
                                 {p.description && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mt-0.5`}>{p.description}</p>}
                             </div>
                         ))}
@@ -121,9 +136,9 @@ const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                                 <div>
                                     <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{edu.degree} {edu.field && `in ${edu.field}`}</h3>
                                     <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{edu.institution}</p>
-                                    {edu.gpa && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
+                                    {edu.gpa && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GPA: {edu.gpa}</p>}
                                 </div>
-                                <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4`}>{formatDate(edu.graduation_date)}</span>
+                                <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} whitespace-nowrap ml-4`}>{formatDate(edu.graduation_date)}</span>
                             </div>
                         ))}
                     </div>
@@ -148,3 +163,4 @@ const StandardATSTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
 };
 
 export default StandardATSTemplate;
+

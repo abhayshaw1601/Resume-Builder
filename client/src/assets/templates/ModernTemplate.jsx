@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
 	const formatDate = (dateStr) => {
@@ -37,21 +39,26 @@ const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, hea
 						</a>
 					)}
 					{data.personal_info?.location && (
-						<div className="flex items-center gap-2">
+						<a 
+							href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 hover:underline"
+						>
 							<MapPin className="size-4" />
 							<span>{data.personal_info.location}</span>
-						</div>
+						</a>
 					)}
 					{data.personal_info?.linkedin && (
 						<a target="_blank" rel="noopener noreferrer" href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} className="flex items-center gap-2 hover:underline">
-							<Link className="size-4" />
-							<span className="break-all text-[0.75em]">{data.personal_info.linkedin.replace(/^https?:\/\/(www\.)?/, '')}</span>
+							<Linkedin className="size-4" />
+							<span className="break-all text-[0.75em]">{cleanUsername(data.personal_info.linkedin, 'linkedin')}</span>
 						</a>
 					)}
 					{data.personal_info?.github && (
 						<a target="_blank" rel="noopener noreferrer" href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} className="flex items-center gap-2 hover:underline">
-							<Link className="size-4" />
-							<span className="break-all text-[0.75em]">{data.personal_info.github.replace(/^https?:\/\/(www\.)?/, '')}</span>
+							<Github className="size-4" />
+							<span className="break-all text-[0.75em]">{cleanUsername(data.personal_info.github, 'github')}</span>
 						</a>
 					)}
 					{data.personal_info?.website && (
@@ -95,7 +102,7 @@ const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, hea
 												}
 											</p>
 										</div>
-										<div className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 ${isDarkMode ? 'bg-[#222]' : 'bg-gray-100'} px-3 py-1 rounded`}>
+										<div className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} ${isDarkMode ? 'bg-[#222]' : 'bg-gray-100'} px-3 py-1 rounded`}>
 											{formatDate(exp.start_date)} - {exp.is_current ? "Present" : formatDate(exp.end_date)}
 										</div>
 									</div>
@@ -188,3 +195,4 @@ const ModernTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, hea
 }
 
 export default ModernTemplate;
+

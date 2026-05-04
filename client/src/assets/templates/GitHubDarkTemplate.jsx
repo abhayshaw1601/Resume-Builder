@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -44,24 +46,34 @@ const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                             </li>
                         )}
                         {data.personal_info?.location && (
-                            <li className="flex items-center gap-2"><MapPin size={12} style={{ color: accent }} />{data.personal_info.location}</li>
+                            <li className="flex items-center gap-2">
+                                <MapPin size={12} style={{ color: accent }} />
+                                <a 
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:underline truncate"
+                                >
+                                    {data.personal_info.location}
+                                </a>
+                            </li>
                         )}
                         {data.personal_info?.linkedin && (
                             <li className="flex items-start gap-2">
-                                <Link size={12} style={{ color: accent }} className="mt-0.5 shrink-0" />
-                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">LinkedIn</a>
+                                <Linkedin size={12} style={{ color: accent }} className="mt-0.5 shrink-0" />
+                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{cleanUsername(data.personal_info.linkedin, 'linkedin')}</a>
                             </li>
                         )}
                         {data.personal_info?.github && (
                             <li className="flex items-start gap-2">
-                                <Link size={12} style={{ color: accent }} className="mt-0.5 shrink-0" />
-                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">GitHub</a>
+                                <Github size={12} style={{ color: accent }} className="mt-0.5 shrink-0" />
+                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{cleanUsername(data.personal_info.github, 'github')}</a>
                             </li>
                         )}
                         {data.personal_info?.website && (
                             <li className="flex items-start gap-2">
                                 <Globe size={12} style={{ color: accent }} className="mt-0.5 shrink-0" />
-                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">Portfolio</a>
+                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</a>
                             </li>
                         )}
                     </ul>
@@ -76,8 +88,8 @@ const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                                 <div key={i}>
                                     <p className="font-semibold text-white text-[0.75em]">{edu.degree}</p>
                                     <p className="text-[0.75em] text-gray-400">{edu.institution}</p>
-                                    <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{formatDate(edu.graduation_date)}</p>
-                                    {edu.gpa && <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
+                                    <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{formatDate(edu.graduation_date)}</p>
+                                    {edu.gpa && <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GPA: {edu.gpa}</p>}
                                 </div>
                             ))}
                         </div>
@@ -119,7 +131,7 @@ const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                                 <div key={i} className="pl-4 border-l-2" style={{ borderColor: `${accent}50` }}>
                                     <div className="flex justify-between items-baseline">
                                         <h3 className="font-semibold text-white">{exp.position}</h3>
-                                        <span className={`text-[0.6875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-3 font-mono`}>
+                                        <span className={`text-[0.6875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} whitespace-nowrap ml-3 font-mono`}>
                                             {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                         </span>
                                     </div>
@@ -160,7 +172,7 @@ const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                                             <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.625em] hover:underline ml-auto" style={{ color: accent }}>↗ Link</a>
                                         )}
                                     </div>
-                                    {p.type && <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 mt-0.5 ml-6`}>{p.type}</p>}
+                                    {p.type && <p className={`text-[0.625em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mt-0.5 ml-6`}>{p.type}</p>}
                                     {p.description && <p className="text-[0.75em] text-gray-400 mt-1 ml-6">{p.description}</p>}
                                 </div>
                             ))}
@@ -173,3 +185,4 @@ const GitHubDarkTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
 };
 
 export default GitHubDarkTemplate;
+

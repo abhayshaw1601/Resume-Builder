@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -56,24 +58,34 @@ const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                                     </li>
                                 )}
                                 {data.personal_info?.location && (
-                                    <li className="flex items-center gap-2"><MapPin size={11} className="opacity-70" />{data.personal_info.location}</li>
+                                    <li className="flex items-center gap-2">
+                                        <MapPin size={11} className="opacity-70" />
+                                        <a 
+                                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="hover:underline truncate"
+                                        >
+                                            {data.personal_info.location}
+                                        </a>
+                                    </li>
                                 )}
                                 {data.personal_info?.linkedin && (
                                     <li className="flex items-start gap-2">
-                                        <Link size={11} className="opacity-70 mt-0.5 shrink-0" />
-                                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline">LinkedIn</a>
+                                        <Linkedin size={11} className="opacity-70 mt-0.5 shrink-0" />
+                                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{cleanUsername(data.personal_info.linkedin, 'linkedin')}</a>
                                     </li>
                                 )}
                                 {data.personal_info?.github && (
                                     <li className="flex items-start gap-2">
-                                        <Link size={11} className="opacity-70 mt-0.5 shrink-0" />
-                                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline">GitHub</a>
+                                        <Github size={11} className="opacity-70 mt-0.5 shrink-0" />
+                                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{cleanUsername(data.personal_info.github, 'github')}</a>
                                     </li>
                                 )}
                                 {data.personal_info?.website && (
                                     <li className="flex items-start gap-2">
                                         <Globe size={11} className="opacity-70 mt-0.5 shrink-0" />
-                                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline">Portfolio</a>
+                                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</a>
                                     </li>
                                 )}
                             </ul>
@@ -162,3 +174,4 @@ const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
 };
 
 export default BentoBoxTemplate;
+

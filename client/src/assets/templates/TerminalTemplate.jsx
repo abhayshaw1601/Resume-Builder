@@ -1,3 +1,5 @@
+import { cleanUsername } from "../../utils/formatters";
+
 const TerminalTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
         if (!dateStr || dateStr === "Invalid Date") return "";
@@ -50,24 +52,34 @@ const TerminalTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                             </div>
                         )}
                         {data.personal_info?.location && (
-                            <div><span className="text-[#bb9af7]">location</span><span className="text-[#89ddff]">=</span><span className="text-[#a9b1d6]">"{data.personal_info.location}"</span></div>
+                            <div>
+                                <span className="text-[#bb9af7]">location</span><span className="text-[#89ddff]">=</span>
+                                <a 
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[#a9b1d6] hover:underline cursor-pointer"
+                                >
+                                    "{data.personal_info.location}"
+                                </a>
+                            </div>
                         )}
                         {data.personal_info?.linkedin && (
                             <div>
                                 <span className="text-[#bb9af7]">linkedin</span><span className="text-[#89ddff]">=</span>
-                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.linkedin}"</a>
+                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{cleanUsername(data.personal_info.linkedin, 'linkedin')}"</a>
                             </div>
                         )}
                         {data.personal_info?.github && (
                             <div>
                                 <span className="text-[#bb9af7]">github</span><span className="text-[#89ddff]">=</span>
-                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.github}"</a>
+                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{cleanUsername(data.personal_info.github, 'github')}"</a>
                             </div>
                         )}
                         {data.personal_info?.website && (
                             <div>
                                 <span className="text-[#bb9af7]">website</span><span className="text-[#89ddff]">=</span>
-                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.website}"</a>
+                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="text-[#a9b1d6] hover:underline cursor-pointer break-all">"{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}"</a>
                             </div>
                         )}
                     </div>

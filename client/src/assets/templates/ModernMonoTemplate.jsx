@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const ModernMonoTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -17,7 +19,7 @@ const ModernMonoTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                 <h1 className={`font-extralight tracking-tight ${isDarkMode ? 'text-gray-100' : 'text-gray-900'} mb-2`} style={{ fontSize: headingSize || 28 }}>
                     {data.personal_info?.full_name || "Your Name"}
                 </h1>
-                <div className={`flex justify-center flex-wrap gap-5 text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 mt-4`}>
+                <div className={`flex justify-center flex-wrap gap-5 text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} mt-4`}>
                     {data.personal_info?.email && (
                         <a href={`mailto:${data.personal_info.email}`} className="flex items-center gap-1.5 hover:underline"><Mail size={12} style={{ color: accentColor }} />{data.personal_info.email}</a>
                     )}
@@ -25,24 +27,32 @@ const ModernMonoTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                         <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1.5 hover:underline"><Phone size={12} style={{ color: accentColor }} />{data.personal_info.phone}</a>
                     )}
                     {data.personal_info?.location && (
-                        <span className="flex items-center gap-1.5"><MapPin size={12} style={{ color: accentColor }} />{data.personal_info.location}</span>
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 hover:underline"
+                        >
+                            <MapPin size={12} style={{ color: accentColor }} />
+                            <span>{data.personal_info.location}</span>
+                        </a>
                     )}
                     {data.personal_info?.linkedin && (
                         <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline">
-                            <Link size={12} style={{ color: accentColor }} />
-                            <span>LinkedIn</span>
+                            <Linkedin size={12} style={{ color: accentColor }} />
+                            <span>{cleanUsername(data.personal_info.linkedin, 'linkedin')}</span>
                         </a>
                     )}
                     {data.personal_info?.github && (
                         <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline">
-                            <Link size={12} style={{ color: accentColor }} />
-                            <span>GitHub</span>
+                            <Github size={12} style={{ color: accentColor }} />
+                            <span>{cleanUsername(data.personal_info.github, 'github')}</span>
                         </a>
                     )}
                     {data.personal_info?.website && (
                         <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:underline">
                             <Globe size={12} style={{ color: accentColor }} />
-                            <span>Portfolio</span>
+                            <span>{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</span>
                         </a>
                     )}
                 </div>
@@ -121,7 +131,7 @@ const ModernMonoTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                             {data.education.map((edu, i) => (
                                 <div key={i}>
                                     <h3 className={`font-medium ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{edu.degree} {edu.field && `in ${edu.field}`}</h3>
-                                    <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 font-light`}>{edu.institution}</p>
+                                    <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} font-light`}>{edu.institution}</p>
                                     <p className="text-[0.75em] text-gray-400">{formatDate(edu.graduation_date)}</p>
                                     {edu.gpa && <p className="text-[0.75em] text-gray-400">GPA: {edu.gpa}</p>}
                                 </div>
@@ -151,3 +161,4 @@ const ModernMonoTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
 };
 
 export default ModernMonoTemplate;
+

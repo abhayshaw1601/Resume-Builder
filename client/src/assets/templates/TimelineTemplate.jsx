@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe, Briefcase, GraduationCap } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe, Briefcase, GraduationCap } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const TimelineTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -25,16 +27,33 @@ const TimelineTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                         <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline"><Phone size={12} style={{ color: accentColor }} />{data.personal_info.phone}</a>
                     )}
                     {data.personal_info?.location && (
-                        <span className="flex items-center gap-1"><MapPin size={12} style={{ color: accentColor }} />{data.personal_info.location}</span>
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:underline"
+                        >
+                            <MapPin size={12} style={{ color: accentColor }} />
+                            {data.personal_info.location}
+                        </a>
                     )}
                     {data.personal_info?.linkedin && (
-                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={12} style={{ color: accentColor }} />LinkedIn</a>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Linkedin size={12} style={{ color: accentColor }} />
+                            {cleanUsername(data.personal_info.linkedin, 'linkedin')}
+                        </a>
                     )}
                     {data.personal_info?.github && (
-                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={12} style={{ color: accentColor }} />GitHub</a>
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Github size={12} style={{ color: accentColor }} />
+                            {cleanUsername(data.personal_info.github, 'github')}
+                        </a>
                     )}
                     {data.personal_info?.website && (
-                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Globe size={12} style={{ color: accentColor }} />Portfolio</a>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline">
+                            <Globe size={12} style={{ color: accentColor }} />
+                            {data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}
+                        </a>
                     )}
                 </div>
                 {data.professional_summary && (
@@ -64,7 +83,7 @@ const TimelineTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                                     <div className={`${isDarkMode ? 'bg-[#1a1a1a]' : 'bg-gray-50'} rounded-xl p-4 border ${isDarkMode ? 'border-white/10' : 'border-gray-100'}`}>
                                         <div className="flex justify-between items-baseline">
                                             <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
-                                            <span className={`text-[0.6875em] px-2 py-0.5 rounded-full ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} border ${isDarkMode ? 'border-white/10' : 'border-gray-200'} whitespace-nowrap ml-3`}>
+                                            <span className={`text-[0.6875em] px-2 py-0.5 rounded-full ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} border ${isDarkMode ? 'border-white/10' : 'border-gray-200'} whitespace-nowrap ml-3`}>
                                                 {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                             </span>
                                         </div>
@@ -154,3 +173,4 @@ const TimelineTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
 };
 
 export default TimelineTemplate;
+

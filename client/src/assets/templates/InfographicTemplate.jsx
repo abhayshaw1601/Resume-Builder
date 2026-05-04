@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const InfographicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -37,23 +39,28 @@ const InfographicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
                         </a>
                     )}
                     {data.personal_info?.location && (
-                        <span className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-amber-50 text-amber-700">
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-amber-50 text-amber-700 hover:scale-105 transition-transform"
+                        >
                             <MapPin size={11} />{data.personal_info.location}
-                        </span>
+                        </a>
                     )}
                     {data.personal_info?.linkedin && (
                         <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-blue-50 text-blue-700 hover:scale-105 transition-transform">
-                            <Link size={11} />LinkedIn
+                            <Linkedin size={11} />{cleanUsername(data.personal_info.linkedin, 'linkedin')}
                         </a>
                     )}
                     {data.personal_info?.github && (
                         <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-gray-100 text-gray-700 hover:scale-105 transition-transform">
-                            <Link size={11} />GitHub
+                            <Github size={11} />{cleanUsername(data.personal_info.github, 'github')}
                         </a>
                     )}
                     {data.personal_info?.website && (
                         <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.75em] bg-purple-50 text-purple-700 hover:scale-105 transition-transform">
-                            <Globe size={11} />Portfolio
+                            <Globe size={11} />{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}
                         </a>
                     )}
                 </div>
@@ -171,3 +178,4 @@ const InfographicTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
 };
 
 export default InfographicTemplate;
+

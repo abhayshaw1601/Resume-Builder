@@ -1,4 +1,6 @@
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
+import { cleanUsername } from "../../utils/formatters";
 
 const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -31,16 +33,24 @@ const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                         <a href={`tel:${data.personal_info.phone.replace(/\s+/g, '')}`} className="flex items-center gap-1 hover:underline"><Phone size={11} />{data.personal_info.phone}</a>
                     )}
                     {data.personal_info?.location && (
-                        <span className="flex items-center gap-1"><MapPin size={11} />{data.personal_info.location}</span>
+                        <a 
+                            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-1 hover:underline text-[#2563eb]"
+                        >
+                            <MapPin size={11} />
+                            <span>{data.personal_info.location}</span>
+                        </a>
                     )}
                     {data.personal_info?.linkedin && (
-                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={11} />LinkedIn</a>
+                        <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Linkedin size={11} />{cleanUsername(data.personal_info.linkedin, 'linkedin')}</a>
                     )}
                     {data.personal_info?.github && (
-                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Link size={11} />GitHub</a>
+                        <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Github size={11} />{cleanUsername(data.personal_info.github, 'github')}</a>
                     )}
                     {data.personal_info?.website && (
-                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Globe size={11} />Portfolio</a>
+                        <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:underline"><Globe size={11} />{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</a>
                     )}
                 </div>
             </header>
@@ -62,10 +72,10 @@ const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                             <div key={i} className={`pb-3 border-b ${isDarkMode ? 'border-white/10' : 'border-gray-200'} last:border-0 last:pb-0`}>
                                 <div className="flex justify-between items-baseline">
                                     <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{edu.degree} {edu.field && `— ${edu.field}`}</h3>
-                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4`}>{formatDate(edu.graduation_date)}</span>
+                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} whitespace-nowrap ml-4`}>{formatDate(edu.graduation_date)}</span>
                                 </div>
                                 <p className="text-[0.875em] italic" style={{ color: accentColor }}>{edu.institution}</p>
-                                {edu.gpa && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>GPA: {edu.gpa}</p>}
+                                {edu.gpa && <p className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>GPA: {edu.gpa}</p>}
                             </div>
                         ))}
                     </div>
@@ -81,7 +91,7 @@ const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                             <div key={i} className={`pb-3 border-b ${isDarkMode ? 'border-white/10' : 'border-gray-200'} last:border-0 last:pb-0`}>
                                 <div className="flex justify-between items-baseline">
                                     <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{exp.position}</h3>
-                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 whitespace-nowrap ml-4`}>
+                                    <span className={`text-[0.75em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} whitespace-nowrap ml-4`}>
                                         {formatDate(exp.start_date)} — {exp.is_current ? "Present" : formatDate(exp.end_date)}
                                     </span>
                                 </div>
@@ -114,7 +124,7 @@ const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
                                     <h3 className={`font-bold ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>{p.name}</h3>
                                     {p.link && <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-[0.75em] hover:underline" style={{ color: accentColor }}>↗</a>}
                                 </div>
-                                {p.type && <p className={`text-[0.75em] italic ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0`}>{p.type}</p>}
+                                {p.type && <p className={`text-[0.75em] italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{p.type}</p>}
                                 {p.description && <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} mt-1`} style={{ fontFamily: "system-ui, sans-serif" }}>{p.description}</p>}
                             </div>
                         ))}
@@ -135,7 +145,7 @@ const AcademicCVTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize,
             {/* References */}
             <section className="pt-2">
                 <SectionTitle>References</SectionTitle>
-                <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-800' : 'text-gray-50'}0 italic`}>Available upon request</p>
+                <p className={`text-[0.875em] ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} italic`}>Available upon request</p>
             </section>
         </div>
     );

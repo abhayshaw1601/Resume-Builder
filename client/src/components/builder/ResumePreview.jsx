@@ -105,7 +105,7 @@ const ResumePreview = ({ resumeData }) => {
 
       {/* A4 Paper Scaled Container */}
       <div 
-        className={`${resumeData.is_dark_mode ? 'bg-[#0a0a0a]' : 'bg-white'} transform origin-top shadow-2xl flex flex-col shrink-0 transition-all duration-300 pointer-events-none self-start mt-4 relative resume-paper`}
+        className={`${resumeData.is_dark_mode ? 'bg-[#0a0a0a]' : 'bg-white'} transform origin-top shadow-2xl flex flex-col shrink-0 transition-all duration-300 self-start mt-4 relative resume-paper`}
         style={{
             width: '210mm',
             minHeight: '297mm',

@@ -1,5 +1,7 @@
+import { Linkedin, Github } from "../../components/icons/BrandIcons";
 import React from 'react';
-import { Mail, Phone, MapPin, Link, Globe } from "lucide-react";
+import { Mail, Phone, MapPin, Globe } from "lucide-react";
+import { cleanUsername } from "../../utils/formatters";
 
 const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -51,24 +53,34 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
                             </li>
                         )}
                         {data.personal_info?.location && (
-                            <li className="flex items-start gap-2"><MapPin className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> <span>{data.personal_info.location}</span></li>
+                            <li className="flex items-start gap-2">
+                                <MapPin className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a 
+                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.personal_info.location)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:underline"
+                                >
+                                    {data.personal_info.location}
+                                </a>
+                            </li>
                         )}
                         {data.personal_info?.linkedin && (
                             <li className="flex items-start gap-2">
-                                <Link className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
-                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline">LinkedIn</a>
+                                <Linkedin className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={data.personal_info.linkedin.startsWith('http') ? data.personal_info.linkedin : `https://${data.personal_info.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{cleanUsername(data.personal_info.linkedin, 'linkedin')}</a>
                             </li>
                         )}
                         {data.personal_info?.github && (
                             <li className="flex items-start gap-2">
-                                <Link className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
-                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline">GitHub</a>
+                                <Github className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
+                                <a href={data.personal_info.github.startsWith('http') ? data.personal_info.github : `https://${data.personal_info.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{cleanUsername(data.personal_info.github, 'github')}</a>
                             </li>
                         )}
                         {data.personal_info?.website && (
                             <li className="flex items-start gap-2">
                                 <Globe className="w-4 h-4 shrink-0 mt-0.5 opacity-70" /> 
-                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline">Portfolio</a>
+                                <a href={data.personal_info.website.startsWith('http') ? data.personal_info.website : `https://${data.personal_info.website}`} target="_blank" rel="noopener noreferrer" className="hover:underline break-all">{data.personal_info.website.replace(/^https?:\/\/(www\.)?/, '')}</a>
                             </li>
                         )}
                     </ul>
@@ -161,3 +173,4 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
 }
 
 export default ExecutiveTemplate;
+
