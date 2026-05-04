@@ -13,7 +13,11 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/server/server.js"
+      "destination": "server/server.js"
+    },
+    {
+      "source": "/((?!api|uploads).*)",
+      "destination": "/client/dist/index.html"
     }
   ]
 }
