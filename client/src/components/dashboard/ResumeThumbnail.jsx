@@ -94,9 +94,10 @@ export default function ResumeThumbnail({ resumeData }) {
       style={{
         width: '210mm',
         height: '297mm',
-        transform: 'scale(0.32)',
+        transform: 'scale(0.25)',
         transformOrigin: 'top center',
-        pointerEvents: 'none'
+        pointerEvents: 'none',
+        userSelect: 'none'
       }}
     >
       {renderTemplate()}
