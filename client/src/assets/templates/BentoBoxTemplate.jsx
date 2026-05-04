@@ -1,6 +1,6 @@
 import { Linkedin, Github } from "../../components/icons/BrandIcons";
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
-import { cleanUsername } from "../../utils/formatters";
+import { cleanUsername, getContrastText } from "../../utils/formatters";
 
 const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -40,7 +40,7 @@ const BentoBoxTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, h
                 </Card>
 
                 {/* Contact Card */}
-                <Card className={isDarkMode ? 'text-black' : 'text-gray-900'} span={1}>
+                <Card className={getContrastText(accentBg || accentColor)} span={1}>
                     <div className="h-full rounded-lg p-1" style={{ background: accentBg || accentColor }}>
                         <div className="p-3">
                             <h2 className="font-bold uppercase tracking-widest mb-3 opacity-80" style={{ fontSize: headingSize ? headingSize * 0.5 : 12 }}>Contact</h2>

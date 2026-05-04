@@ -1,7 +1,7 @@
 import { Linkedin, Github } from "../../components/icons/BrandIcons";
 import React from 'react';
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
-import { cleanUsername } from "../../utils/formatters";
+import { cleanUsername, getContrastText } from "../../utils/formatters";
 
 const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -21,7 +21,7 @@ const ExecutiveTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, 
     return (
         <div className={`w-full min-h-full ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'} ${isDarkMode ? 'text-gray-200' : 'text-gray-800'} leading-relaxed flex flex-row shadow-2xl`} style={{ fontSize: fontSize || 16 }}>
             {/* Left Sidebar */}
-            <aside className={`w-[30%] min-h-full p-6 ${isDarkMode ? 'text-black' : 'text-gray-900'} flex flex-col gap-8 shrink-0`} style={{ background: accentBg || accentColor || '#1e293b' }}>
+            <aside className={`w-[30%] min-h-full p-6 ${getContrastText(accentBg || accentColor || '#1e293b')} flex flex-col gap-8 shrink-0`} style={{ background: accentBg || accentColor || '#1e293b' }}>
                 
                 {data.personal_info?.photo && (
                     <div className={`w-32 h-32 mx-auto rounded-full overflow-hidden border-4 border-black/20 shadow-lg shrink-0 ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}`}>

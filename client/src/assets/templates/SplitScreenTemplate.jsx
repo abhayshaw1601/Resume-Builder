@@ -1,6 +1,6 @@
 import { Linkedin, Github } from "../../components/icons/BrandIcons";
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
-import { cleanUsername } from "../../utils/formatters";
+import { cleanUsername, getContrastText } from "../../utils/formatters";
 
 const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize, headingSize, sectionSpacing }) => {
     const formatDate = (dateStr) => {
@@ -15,7 +15,7 @@ const SplitScreenTemplate = ({ isDarkMode, data, accentColor, accentBg, fontSize
     return (
         <div className="w-full min-h-full flex" style={{ fontSize: fontSize || 15 }}>
             {/* Left Panel */}
-            <aside className={`w-[36%] ${isDarkMode ? 'text-black' : 'text-gray-900'} p-7 flex flex-col gap-6 shrink-0`} style={{ background: accentBg || accentColor }}>
+            <aside className={`w-[36%] ${getContrastText(accentBg || accentColor)} p-7 flex flex-col gap-6 shrink-0`} style={{ background: accentBg || accentColor }}>
                 {/* Photo */}
                 {data.personal_info?.photo && (
                     <div className={`w-28 h-28 mx-auto rounded-full overflow-hidden border-4 border-black/20 shadow-lg ${isDarkMode ? 'bg-[#0a0a0a]' : 'bg-white'}/10`}>

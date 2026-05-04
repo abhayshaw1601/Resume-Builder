@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-    baseURL: 'https://resume-builder-backend-liart-beta.vercel.app/api',
+    baseURL: import.meta.env.VITE_BACKEND || 'http://localhost:5000/api',
 });
 
 // Add a request interceptor to include the token in headers
