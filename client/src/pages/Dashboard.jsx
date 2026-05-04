@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link, useNavigate } from 'react-router-dom'
 import API from '../api/axios'
+import ResumeThumbnail from '../components/dashboard/ResumeThumbnail'
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -207,22 +208,10 @@ const Dashboard = () => {
               }`}
             >
 
-              {/* Thumbnail placeholder */}
-              <div className="flex-1 bg-white/5 border-b border-white/[0.06] p-4 relative overflow-hidden group-hover:opacity-80 transition-opacity">
-                <div className="w-full h-full bg-black/40 rounded-lg shadow-inner flex flex-col p-4 gap-2 border border-white/5 relative">
-                  <div className="w-1/2 h-3 rounded mb-2" style={{ backgroundColor: resume.accent_color || '#A6FF5D', opacity: 0.8 }}></div>
-                  <div className="w-full h-1 bg-gray-700 mt-2 rounded"></div>
-                  <div className="w-4/5 h-1 bg-gray-700 rounded"></div>
-                  <div className="w-3/4 h-1 bg-gray-700 rounded"></div>
-                  <div className="w-full flex gap-2 mt-4">
-                    <div className="w-1/3 h-16 bg-white/5 rounded"></div>
-                    <div className="w-2/3 h-16 bg-white/5 rounded flex-col flex gap-1.5 p-1.5">
-                      <div className="w-full h-1 bg-gray-600 rounded"></div>
-                      <div className="w-full h-1 bg-gray-600 rounded"></div>
-                      <div className="w-2/3 h-1 bg-gray-600 rounded"></div>
-                    </div>
-                  </div>
-                </div>
+              {/* Thumbnail Preview */}
+              <div className="flex-1 bg-white/5 border-b border-white/[0.06] relative overflow-hidden group-hover:opacity-80 transition-opacity flex justify-center">
+                <ResumeThumbnail resumeData={resume} />
+              </div>
 
                 {/* Hover Overlay Actions */}
                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
@@ -261,7 +250,6 @@ const Dashboard = () => {
               </div>
 
             </div>
-          </div>
         ))}
 
       </div>

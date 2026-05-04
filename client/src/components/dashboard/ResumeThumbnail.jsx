@@ -14,13 +14,12 @@ import TerminalTemplate from '../../assets/templates/TerminalTemplate'
 import AcademicCVTemplate from '../../assets/templates/AcademicCVTemplate'
 import InfographicTemplate from '../../assets/templates/InfographicTemplate'
 import PitchDeckTemplate from '../../assets/templates/PitchDeckTemplate'
-import { getAccentSolidColor } from './FormSections/ThemeSettingsForm'
+import { getAccentSolidColor } from '../builder/FormSections/ThemeSettingsForm'
 
-export default function ResumePreview({ resumeData }) {
-  
+export default function ResumeThumbnail({ resumeData }) {
   if (!resumeData) return null;
 
-  // THE ADAPTER: Map internal engine state into external Template prop state
+  // Map internal engine state into external Template prop state
   const adaptedData = {
     personal_info: {
       full_name: resumeData.personal_info?.name || resumeData.personal_info?.full_name || '',
@@ -31,35 +30,25 @@ export default function ResumePreview({ resumeData }) {
       github: resumeData.personal_info?.github || '',
       website: resumeData.personal_info?.portfolio || resumeData.personal_info?.website || '',
       photo: resumeData.personal_info?.photo || resumeData.personal_info?.image || null,
-      photo_settings: resumeData.personal_info?.photo_settings || null
     },
     professional_summary: resumeData.summary || resumeData.professional_summary || '',
-    experience: (resumeData.experience || []).map(exp => {
-      const duration = exp.duration || `${exp.start_date || ''} - ${exp.is_current ? 'Present' : (exp.end_date || '')}`;
-      const parts = duration.split(' - ') || []
-      return {
-        position: exp.title || exp.position || '',
-        company: exp.company || '',
-        start_date: parts[0]?.trim() || '',
-        end_date: parts[1]?.trim() || '',
-        is_current: duration.toLowerCase().includes('present') || false,
-        description: exp.description || '',
-        link: exp.link || ''
-      }
-    }),
+    experience: (resumeData.experience || []).map(exp => ({
+      position: exp.title || exp.position || '',
+      company: exp.company || '',
+      start_date: exp.start_date || '',
+      end_date: exp.end_date || '',
+      is_current: exp.is_current || false,
+      description: exp.description || '',
+    })),
     education: (resumeData.education || []).map(edu => ({
       degree: edu.degree || '',
       institution: edu.school || edu.institution || '',
       graduation_date: edu.year || edu.graduation_date || '',
-      gpa: edu.gpa || '',
-      field: edu.field || ''
     })),
     skills: resumeData.skills || [],
     project: (resumeData.projects || resumeData.project || []).map(p => ({
       name: p.name || '',
       description: p.description || '',
-      type: p.type || '',
-      link: p.link || ''
     }))
   }
 
@@ -68,16 +57,17 @@ export default function ResumePreview({ resumeData }) {
   const accentColor = getAccentSolidColor(rawAccent)
   const accentBg = rawAccent
 
+  const props = { 
+    data: adaptedData, 
+    isDarkMode: resumeData.is_dark_mode,
+    accentColor, 
+    accentBg, 
+    fontSize: 10, // Small font for thumbnail
+    headingSize: 14,
+    sectionSpacing: 10
+  }
+
   const renderTemplate = () => {
-    const props = { 
-        data: adaptedData, 
-        isDarkMode: resumeData.is_dark_mode,
-        accentColor, 
-        accentBg, 
-        fontSize: resumeData.font_size || 16,
-        headingSize: resumeData.heading_size || 24,
-        sectionSpacing: resumeData.section_spacing || 24
-    }
     switch(templateId) {
         case 'classic': return <ClassicTemplate {...props} />
         case 'modern': return <ModernTemplate {...props} />
@@ -99,26 +89,17 @@ export default function ResumePreview({ resumeData }) {
   }
 
   return (
-    <div className="bg-gray-900/40 rounded-2xl p-4 md:p-8 flex items-center justify-center border border-white/10 shadow-inner h-full w-full overflow-y-auto custom-scrollbar relative preview-container">
-      <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-[#A6FF5D]/5 blur-[120px] rounded-full pointer-events-none -z-10" />
-      
-      {/* A4 Paper */}
-      <div 
-        className={`${resumeData.is_dark_mode ? 'bg-[#0a0a0a]' : 'bg-white'} shadow-2xl flex flex-col shrink-0 transition-all duration-300 relative resume-paper self-start mt-4`}
-        style={{
-            width: '210mm',
-            minHeight: '297mm',
-        }}
-      >
-        <div 
-            className="absolute left-0 right-0 border-b-2 border-dashed border-red-500/30 z-20 no-print pointer-events-none"
-            style={{ top: '297mm' }}
-        >
-            <span className="absolute right-4 bottom-1 text-[10px] font-bold text-red-500/50 uppercase tracking-widest">Page 1 Ends Here</span>
-        </div>
-
-        {renderTemplate()}
-      </div>
+    <div 
+      className={`${resumeData.is_dark_mode ? 'bg-[#0a0a0a]' : 'bg-white'} flex flex-col shrink-0 relative shadow-2xl overflow-hidden`}
+      style={{
+        width: '210mm',
+        height: '297mm',
+        transform: 'scale(0.32)',
+        transformOrigin: 'top center',
+        pointerEvents: 'none'
+      }}
+    >
+      {renderTemplate()}
     </div>
   )
 }
