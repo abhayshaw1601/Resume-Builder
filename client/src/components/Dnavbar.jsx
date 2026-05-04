@@ -8,7 +8,8 @@ const Dnavbar = () => {
 
     const handleLogout = () => {
         logout()
-        navigate('/') // Redirect to home on logout
+        // No need to navigate here; ProtectedRoute will automatically
+        // redirect to /login because isAuthenticated becomes false.
     }
 
     return (

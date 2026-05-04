@@ -214,6 +214,10 @@ const ResumeBuilder = () => {
 
   useEffect(() => {
     loadExistingResume()
+    // Cleanup title on unmount
+    return () => {
+      document.title = 'Resume Builder'
+    }
   }, [resumeId])
 
   const handlePrint = () => {
